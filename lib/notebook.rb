@@ -173,3 +173,113 @@
 # Let's try and use connect-four-tdd files
 # to get a basic sketch of the chess game.
 
+# How ought the various chess pieces be 
+# treated?
+
+# - In the end they ought to have an 
+#   instance variable for the respective
+#   symbol.
+# - Ought they all to derive from one class,
+# ChessPiece class?
+# - Ought they to have an instance variable
+# for its possible moves?
+
+# In the end, if thinking this through
+# correctly, user input will be as simple
+# as the location of the piece to be moved
+# with the final desired destination location.
+# Something in the lines 2a-3a, for example.
+
+# Under the hood:
+# There will have to be an update_board method
+# that verifies that move desired by user
+# is valid and changes the board and the 
+# board display accordingly.
+
+# The verification that a desired move by a user
+# is valid could perhaps be made interrogating
+# the respetive piece's node whether that
+# desired move is included in an instance 
+# variable which would countain its
+# possible moves.
+
+# Two ways to arrange things present themselves:
+# 1. Piece class to be initialized with symbol
+#    and possible_moves as instance variables.
+#    Bishop, rook, pawn, queen, knight classes
+#    inherit from Piece class but fill 
+#    possible_moves instance variables with 
+#    respective methods.
+# 2. Do away with Piece superclass and just 
+#    create the various chess pieces' classes
+#    separately.
+
+# There really doesn't seem to be a need for 
+# there to be a chess piece superclass...
+# At least at the moment...
+
+# Besides what would this inherit framework
+# look like?
+
+# class ChessPiece ; end
+
+# class King < ChessPiece
+#   attr_reader :symbol
+#   def initialize(symbol)
+#     @symbol = symbol
+#   end
+
+#   def possible_moves
+#     ["hello"]
+#   end
+# end
+
+# king = King.new("\u2654")
+# p king.possible_moves
+# p king.symbol
+
+# As of right now, something that doesn't
+# seem all that useful, specially if 
+# it means what was above layed out.
+
+# A class for each ChessPiece is to be then.
+
+# Does each ChessPiece class need an 
+# instance variable for its position?
+
+# #possible_moves, currently associated with
+# each ChessPiece class, will more than likely
+# need the location of the respective piece
+# and the current state of the board.
+
+# So a location instance variable associated
+# with each ChessPiece variable may make things
+# easier for the possible_moves method.
+
+# Class for each ChessPiece will then have
+# as instance variables: location and symbol.
+# Possible moves can perhaps remain a method.
+
+# Location ought to have a setter method, as it
+# ought to be able to change.
+# Symbol can perhaps only have a getter method.
+
+# Example: 
+
+# class King
+#   attr_accessor :location
+#   attr_reader :symbol
+#   def initialize(symbol, location)
+#     @symbol = symbol
+#     @location = location
+#   end
+
+#   def possible_moves
+
+#   end
+# end
+
+# king = King.new("\u2654", "e1")
+
+# p king.symbol
+# p king.location
