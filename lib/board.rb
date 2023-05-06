@@ -23,7 +23,7 @@ class Board
       -----------------------------------------
       | 7     | #{scells[56]} | #{scells[55]} | #{scells[54]} | #{scells[53]} | #{scells[52]} | #{scells[51]} | #{scells[50]} | #{scells[49]} |
       -----------------------------------------
-      | 6     | #{scells[41]} | #{scells[42]} | #{scells[43]} | #{scells[44]} | #{scells[45]} | #{scells[46]} | #{scells[47]} | #{scells[48]} |
+      | 6     | #{scells[48]} | #{scells[47]} | #{scells[46]} | #{scells[45]} | #{scells[44]} | #{scells[43]} | #{scells[42]} | #{scells[41]} |
       -----------------------------------------
       | 5     | #{scells[40]} | #{scells[39]} | #{scells[38]} | #{scells[37]} | #{scells[36]} | #{scells[35]} | #{scells[34]} | #{scells[33]} |
       -----------------------------------------
