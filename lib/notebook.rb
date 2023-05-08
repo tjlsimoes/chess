@@ -31,25 +31,25 @@
 #   of piece: rook, bishop, queen, king, ...
 
 
-# - Input from users will be limited to 
-#   the reference to two positions, the 
+# - Input from users will be limited to
+#   the reference to two positions, the
 #   position of the piece to be moved and the
 #   desired position of that same piece.
 # - Somehow each user input will have to be
 #   verified. It might not be valid.
-# - Not only ought each user input be 
+# - Not only ought each user input be
 #   verified to be valid, but it ought also
 #   be verified whether or not such a move
 #   "takes" an opponent's chess piece.
 # - Must not forget: taking en-passant and
 #   castling.
 
-# Must also not forget: 
-# - Check and checkmate evaluations; 
+# Must also not forget:
+# - Check and checkmate evaluations;
 # - Possibilty to quit at any time;
 # - Proposition of a draw after a move made.
 # - Draw claim through repetition of moves.
-# - Exchange of pieces when other end of 
+# - Exchange of pieces when other end of
 #   board is reached.
 
 
@@ -621,6 +621,8 @@
 #   the position is occupied on the board
 #   by another chess piece of the same
 #   colour.
+# - It is not currently associated with
+#   location instance variable!
 
 # How ought this to be fixed?
 # - To be resolved in board #valid_move?
@@ -640,10 +642,174 @@
 # do. Problem to be resolved in #valid_move?
 # of Board class!
 
+# Also solved:
+# ✓ It is not currently associated with
+#   location instance variable!
+
 # This being said an expansion of the various
 # chess pieces' classes could now be attempted.
 # The addition of the respective possible_moves
 # method.
 
 
-# Let us start with the Rook class.
+# Let us start with the Rook class [Tower class].
+
+# Formally, a rook's possible moves will
+# correspond to all possible variations on the
+# x-axis with the y-axis unaltered, on the one
+# hand and, on the other hand, all possible
+# variations on the y-axis with the x-axis
+# unaltered.
+
+# Let us take "d5" as the rook's location.
+
+# location = "d5"
+
+# columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+# possible_moves = []
+
+# coordinates = location.split("")
+
+# columns.delete(coordinates[0])
+# column_vars = columns
+
+
+# rows = Array(1..8)
+# (Array(1..8)).delete(coordinates[1])
+# row_vars = rows
+
+# for i in column_vars do
+#   possible_moves << [i, coordinates[1]].join
+# end
+
+# for i in row_vars do
+#   possible_moves << [coordinates[0], i].join
+# end
+
+# possible_moves
+
+############### 8 May ######################
+
+# Problem being tackled:
+# - #possible_moves for each chess piece
+#   respective class.
+#       ✓ King, Rook
+#       - Bishop, Queen, Knight, Pawn
+
+# Let's tackle Bishop's #possible_moves
+
+# Formally:
+# Bishop's possible moves will correspond
+# to all possible changes within a board
+# with linear proportinal and simultaneous
+#  changes in the x-axis and the y axis.
+
+# Let us take "d5" as the bishop's location.
+
+# #possible_moves will have to output:
+# ["a8", "a2", "b7", "b3", "c6", "c4",
+#  "e6", "e4", "f7", "f3", "g8", "g2",
+#   "h1"]
+
+# location = "d5"
+
+# columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+# possible_moves = []
+
+# coordinates = location.split("")
+# row = coordinates[1].to_i
+
+# column_idx = columns.index(coordinates[0])
+
+
+# i = 0
+# while i < columns.length do
+#   if columns[i] != coordinates[0]
+#     difference = (column_idx - i).abs
+
+#     p difference
+
+#     possible_moves << [columns[i], row + difference].join if row + difference <= 8
+#     possible_moves << [columns[i], row - difference].join if row - difference >= 0
+#   end
+
+#   i += 1
+# end
+
+# p possible_moves
+
+
+###### Notes:
+# - There might be a lack of consistency
+# between the logic behind the board display
+# and the way each #possible_moves is being
+# designed...
+# - Not to mention that #possible_moves
+# does not, as of yet, give actual possible
+# moves. Actual possible moves will require
+# a more thourough evaluation of the state
+# of the board.
+
+# Problem being tackled:
+# - #possible_moves for each chess piece
+#   respective class.
+#       ✓ King, Rook, Bishop
+#       - Queen, Knight, Pawn
+
+
+# Let's tackle Queen's #possible_moves
+
+# Formally, queen's possible moves
+# correspond to the combined moves of the
+# rook and the bishop.
+
+# Problem being tackled:
+# - #possible_moves for each chess piece
+#   respective class.
+#       ✓ King, Rook, Bishop, Queen
+#       - Knight, Pawn
+
+
+# Let's tackle Knight's #possible_moves
+
+# Formally:
+# -1/+1 column => +2/-2 row
+# -2/+2 column => +1/-1 row
+
+# Let us take "d5" as the knight's location.
+
+# #possible_moves will have to output:
+# %w(e3 e7 f4 f6 b4 b6 c3 c7)
+
+# location = "d5"
+
+# columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+# coordinates = location.split("")
+# column_idx = columns.index(coordinates[0])
+
+# possible_moves = []
+
+# [-2, -1, 1, 2].each do |shift|
+
+#   new_column = columns[column_idx + shift]
+
+#   if shift.abs == 2
+#     possible_moves << [new_column, coordinates[1].to_i + 1].join
+#     possible_moves << [new_column, coordinates[1].to_i - 1].join
+#   else
+#     possible_moves << [new_column, coordinates[1].to_i + 2].join
+#     possible_moves << [new_column, coordinates[1].to_i - 2].join
+#   end
+
+# end
+
+# possible_moves
+
+# Problem being tackled:
+# - #possible_moves for each chess piece
+#   respective class.
+#       ✓ King, Rook, Bishop, Queen, Knight
+#       - Pawn
