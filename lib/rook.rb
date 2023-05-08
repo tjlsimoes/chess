@@ -16,7 +16,7 @@ class Rook
     column_vars = columns
 
     rows = Array(1..8)
-    (Array(1..8)).delete(coordinates[1])
+    rows.delete(coordinates[1].to_i)
     row_vars = rows
 
     possible_moves = []
