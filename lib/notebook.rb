@@ -4,21 +4,21 @@
 
 ############### 3 May ######################
 # Assignment:
-# 1. Build a command line Chess game where 
+# 1. Build a command line Chess game where
 #    two players can play against each other.
-# 2. The game should be properly constrained 
-#    – it should prevent players from making 
-#      illegal moves and declare check or 
+# 2. The game should be properly constrained
+#    – it should prevent players from making
+#      illegal moves and declare check or
 #      check mate in the correct situations.
-# 3. Make it so you can save the board at 
+# 3. Make it so you can save the board at
 #    any time.
 # 4. Write tests for the important parts.
-# 5. Do your best to keep your classes modular 
-#    and clean and your methods doing only one 
+# 5. Do your best to keep your classes modular
+#    and clean and your methods doing only one
 #    thing each.
 
 # ###############  High-level game overview:
-# - Game between two players playing 
+# - Game between two players playing
 #   alternatively.
 
 # - Board class initialized with the expected
@@ -68,9 +68,9 @@
 
 # Another possibility would be to display
 # each chess piece preceded by the initial
-# of its corresponding colour's name and 
-# let each empty square either be empty as 
-# in an empty grid or be filled with the 
+# of its corresponding colour's name and
+# let each empty square either be empty as
+# in an empty grid or be filled with the
 # respective coordinates.
 
 
@@ -808,8 +808,185 @@
 
 # possible_moves
 
+############### 9 May ######################
+
 # Problem being tackled:
 # - #possible_moves for each chess piece
 #   respective class.
 #       ✓ King, Rook, Bishop, Queen, Knight
 #       - Pawn
+
+# Let's tackle Pawn's #possible_moves
+
+# Pawn is a weird piece.
+# Not only does it move differently
+# when it has never moved, it also moves
+# differently when takin an opponent's
+# chess piece.
+
+# For the time being the best course of
+# action seems to be to include possible
+# diagonal moves into #possible_moves.
+# And also, in a conditional flow, the
+# possible two square initial move.
+
+# Perhaps later implement an additional
+# layer of validation of user input
+# in Board#valid_move? ?
+
+# Also ignoring en passant move for now.
+
+# Add a @unmoved instance variable to each
+# pawn piece. Set by default to true. With
+# a setter method enabled.
+
+# #possible_moves ought to output different
+# results in light of @unmoved's value.
+
+# Irregardless of that, pawn's possible moves
+# equal, formally, to two most close forward
+# diagonal squares and closemost forward square.
+
+# Assuming a pawn at "d5".
+# possible_moves ought to equal:
+# ["d6", "e6", "c6"]
+
+# location = "d5"
+
+# columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+# possible_moves = []
+
+# coordinates = location.split("")
+# column_idx = columns.index(coordinates[0])
+# row = coordinates[1].to_i
+
+# column_vars = [columns[column_idx - 1], coordinates[0], columns[column_idx + 1]]
+
+# for i in column_vars do
+
+#   possible_moves << [i, row + 1 ].join if row + 1 <= 8
+# end
+
+# p possible_moves
+
+# Additional logic has to be added for
+# it to have a conditional flow in respect
+# to the @unmoved instance variable.
+
+# unmoved = true
+# location = "d5"
+
+# columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+# possible_moves = []
+
+# coordinates = location.split("")
+# column_idx = columns.index(coordinates[0])
+# row = coordinates[1].to_i
+
+# column_vars = [columns[column_idx - 1], columns[column_idx], columns[column_idx + 1]]
+
+
+# for i in column_vars do
+#   if unmoved && i == coordinates[0]
+#     possible_moves << [i, row + 1 ].join if row + 1 <= 8
+#     possible_moves << [i, row + 2 ].join if row + 1 <= 8
+#   else
+#     possible_moves << [i, row + 1 ].join if row + 1 <= 8
+#   end
+# end
+
+# p possible_moves
+
+
+# Problem being tackled:
+# ✓ #possible_moves for each chess piece
+#   respective class.
+# ✓ King, Rook, Bishop, Queen, Knight, Pawn
+
+
+# ###### High-level game overview renovated:
+# - Game between two players playing
+#   alternatively.
+
+# - Input from users will be limited to
+#   the reference to two positions, the
+#   position of the piece to be moved and the
+#   desired position of that same piece.
+# - Somehow each user input will have to be
+#   verified. It might not be valid.
+# - Not only ought each user input be
+#   verified to be valid, but it ought also
+#   be verified whether or not such a move
+#   "takes" an opponent's chess piece.
+# - Must not forget: taking en-passant and
+#   castling.
+
+# Must also not forget:
+# - Check and checkmate evaluations;
+# - Possibilty to quit at any time;
+# - Proposition of a draw after a move made.
+# - Draw claim through repetition of moves.
+# - Exchange of pieces when other end of
+#   board is reached.
+
+# What ought to be my next working point?
+# Ideally the next most immediate goal
+# ought to be to have an actually working
+# chess game on the terminal.
+
+# The next most immmediate logic step in
+# that direction seems to be to work
+# on Board#valid_move? and Board#update_board
+# methods.
+
+# Board#valid_moved? would be called from
+# within Board#update_board.
+
+# Conceptually I was thinking on one single
+# user input which would need to include two
+# things given simultaneously: location of
+# the desired piece to be moved and the end
+# location of that same piece.
+
+# However that user input could be broken into
+# two moments: (1) which chess piece ought to
+# and (2)to where it ought to move.
+
+# Be that as it may, Board#update_board will
+# take in the previously stated two elements,
+# come as they may (simultaneously or not).
+
+# Board#update_board ought to call from
+# Board#valid_move? and then update the board
+# and the board display accordingly.
+
+# Conceptually Board#valid_move? was being
+# thought as something as simple as checking
+# whether or not the designated chess piece
+# at the specified location included the
+# desired location in its respecitve
+# possible_moves method output.
+
+# Things don't seem, however, to be that
+# simple.
+# Why?
+# Possibly due to a misconception as regards
+# to what #possible_moves ought to be.
+
+# #possible_moves currently lists all possible
+# moves of a given chess piece in an empty board!
+
+# More than that, as is the case with Pawn,
+# it lists "possibly not possible" moves -
+# the diagonal moves are only valid if there is
+# an opponent piece at that square.
+
+# Not to mention it currently also doesn't
+# take in account of en passant, castling
+# and possible exchange between pieces.
+
+# But one thing at a time.
+
+# One thing than can - and perhaps ought to -
+# be done before all this is to make Board.new
+# generate a duly populated board!
