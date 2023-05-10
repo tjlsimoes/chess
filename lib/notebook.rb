@@ -990,3 +990,8 @@
 # One thing than can - and perhaps ought to -
 # be done before all this is to make Board.new
 # generate a duly populated board!
+
+############### 10 May #####################
+
+# Problem to be tackled:
+# - Duly populate Board with initial board.

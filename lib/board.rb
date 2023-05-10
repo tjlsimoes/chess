@@ -1,11 +1,16 @@
-
+require_relative "rook.rb"
+require_relative "knight.rb"
+require_relative "bishop.rb"
+require_relative "king.rb"
+require_relative "queen.rb"
+require_relative "pawn.rb"
 # Chess board
 
 class Board
   attr_reader :cells
 
   def initialize
-    @cells = Array.new(43)
+    @cells = initial_board
   end
 
   def show
@@ -39,6 +44,70 @@ class Board
               | a | b | c | d | e | f | g | h |
               ---------------------------------
     HEREDOC
+  end
+
+  def initial_board
+    cells = Array.new(65)
+    columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+    # Black chess pieces.
+
+    cells[57] = Rook.new("\u265C", "h8")
+    cells[64] = Rook.new("\u265C", "a8")
+
+    cells[58] = Knight.new("\u265E", "g8")
+    cells[63] = Knight.new("\u265E", "b8")
+
+    cells[59] = Bishop.new("\u265D", "f8")
+    cells[62] = Bishop.new("\u265D", "c8")
+    
+    cells[60] = Queen.new("\u265A", "d8")
+    cells[61] = King.new("\u265B", "e8")
+
+    for i in (49..56) do
+
+      if i % 8 != 0
+        number = (i / 8) + 1
+        letter = columns[8 - (i % 8)]
+      else
+        number = i % 8
+        letter = "a"
+      end
+      location = [letter, number].join
+
+      cells[i] = Pawn.new("\u265F", location)
+    end
+
+    # White chess pieces.
+
+    cells[1] = Rook.new("\u2656", "h1")
+    cells[8] = Rook.new("\u2656", "a1")
+
+    cells[2] = Knight.new("\u2658", "g1")
+    cells[7] = Knight.new("\u2658", "b1")
+
+    cells[3] = Bishop.new("\u2657", "f1")
+    cells[6] = Bishop.new("\u2657", "c1")
+
+    cells[4] = King.new("\u2654", "e1")
+    cells[5] = Queen.new("\u2655", "d1")
+
+    for i in (9..16) do
+
+      if i % 8 != 0
+        number = (i / 8) + 1
+        letter = columns[8 - (i % 8)]
+      else
+        number = i % 8
+        letter = "a"
+      end
+
+      location = [letter, number].join
+
+      cells[i] = Pawn.new("\u2659", location)
+    end
+
+    cells
   end
 
   def valid_move?()
