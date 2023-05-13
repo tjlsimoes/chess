@@ -27,7 +27,8 @@ class Pawn
     column_idx = columns.index(coordinates[0])
     row = coordinates[1].to_i
 
-    column_vars = [columns[column_idx - 1], columns[column_idx], columns[column_idx + 1]]
+    column_vars = [columns[column_idx], columns[column_idx + 1]]
+    column_vars << columns[column_idx - 1] if column_idx - 1 > 0
 
     for i in column_vars do
       if @unmoved && i == coordinates[0]

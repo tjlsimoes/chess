@@ -23,6 +23,16 @@ describe Pawn do
         expect(output.sort).to eq(%w[c3 d3 d4 e3])
       end
     end
+
+    describe "at position a2 with @unmoved == true and results sorted" do
+      subject(:pawn) { Pawn.new("\u2659", "a2")}
+
+      it "returns %w[a3 a4 b3]" do
+        pawn.instance_variable_set(:@unmoved, true)
+        output = pawn.possible_moves
+        expect(output.sort).to eq(%w[a3 a4 b3])
+      end
+    end
   end
 
   describe "#get_colour" do
