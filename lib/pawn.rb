@@ -2,12 +2,21 @@
 
 class Pawn
   attr_accessor :location, :unmoved
-  attr_reader :symbol
-  
+  attr_reader :symbol, :colour
+
   def initialize(symbol, location, unmoved = true)
     @symbol = symbol
     @location = location
+    @colour = get_colour
     @unmoved = unmoved
+  end
+
+  def get_colour
+    if symbol == "\u2659"
+      "white"
+    else
+      "black"
+    end
   end
 
   def possible_moves

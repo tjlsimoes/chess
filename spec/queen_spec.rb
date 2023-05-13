@@ -6,6 +6,24 @@ require_relative "../lib/queen.rb"
 describe Queen do
   subject(:queen) { Queen.new("\u2655", "d5")}
 
+  describe "#get_colour" do
+    describe "when symbol is white" do
+      it "returns 'white'" do
+        output = queen.get_colour
+        expect(output).to eq('white')
+      end
+    end
+
+    describe "when symbol is black" do
+      subject(:queen) { Queen.new("\u265B", "d5")}
+
+      it "returns 'black'" do
+        output = queen.get_colour
+        expect(output).to eq('black')
+      end
+    end
+  end
+
   describe "#possible_moves" do
     describe "at position d5 with results sorted" do
       it "returns rook and bishop combined moves" do

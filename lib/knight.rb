@@ -2,10 +2,20 @@
 
 class Knight
   attr_accessor :location
-  attr_reader :symbol
+  attr_reader :symbol, :colour
+
   def initialize(symbol, location)
     @symbol = symbol
     @location = location
+    @colour = get_colour
+  end
+
+  def get_colour
+    if symbol == "\u2658"
+      "white"
+    else
+      "black"
+    end
   end
 
   def possible_moves
