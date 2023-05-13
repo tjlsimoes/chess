@@ -60,7 +60,7 @@ class Board
 
     cells[59] = Bishop.new("\u265D", "f8")
     cells[62] = Bishop.new("\u265D", "c8")
-    
+
     cells[60] = Queen.new("\u265A", "d8")
     cells[61] = King.new("\u265B", "e8")
 
@@ -108,6 +108,132 @@ class Board
     end
 
     cells
+  end
+
+  def diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+    end_loc_col > start_loc_col && end_loc_row > start_loc_row
+  end
+  
+  def diag_right_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+    end_loc_col > start_loc_col && start_loc_row > end_loc_row
+  end
+  
+  def diag_left_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+    start_loc_col > end_loc_col && end_loc_row > start_loc_row
+  end
+  
+  def diag_left_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+    start_loc_col > end_loc_col && start_loc_row > end_loc_row
+  end
+
+  def intermediate_squares(user_input)
+
+    start_loc = user_input[0]
+    end_loc = user_input[1]
+  
+    start_loc_col = start_loc[0]
+    start_loc_row = start_loc[1].to_i
+  
+    end_loc_col = end_loc[0]
+    end_loc_row = end_loc[1].to_i
+  
+    # No precaution here set for same end and
+    # starting location.
+  
+    intermediate_squares = []
+    columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+  
+    if start_loc_col == end_loc_col # vertical movement
+  
+      if start_loc_row > end_loc_row # downwards
+  
+        i = start_loc_row - 1
+        while i > end_loc_row
+  
+          intermediate_squares << [start_loc_col, i].join
+          i -= 1
+        end
+  
+      else # upwards
+  
+        i = start_loc_row + 1
+        while i < end_loc_row
+  
+          intermediate_squares << [start_loc_col, i].join
+          i += 1
+        end
+      end
+  
+    elsif start_loc_row == end_loc_row # horizontal movement
+  
+      if start_loc_col > end_loc_col # to the left
+  
+        i = columns.index(start_loc_col) - 1
+        while i > columns.index(end_loc_col)
+  
+          intermediate_squares << [columns[i], start_loc_row].join
+          i -= 1
+        end
+      else # to the right
+  
+        i = columns.index(start_loc_col) + 1
+        while i < columns.index(end_loc_col)
+  
+          intermediate_squares << [columns[i], start_loc_row].join
+          i += 1
+        end
+      end
+  
+    elsif diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+  
+      j = start_loc_row + 1
+      i = columns.index(start_loc_col) + 1
+      while i < columns.index(end_loc_col) && j < end_loc_row
+  
+        intermediate_squares << [columns[i], j].join
+  
+        i += 1
+        j += 1
+      end
+  
+    elsif diag_right_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+  
+      j = start_loc_row - 1
+      i = columns.index(start_loc_col) + 1
+      while i < columns.index(end_loc_col) && j > end_loc_row
+  
+        intermediate_squares << [columns[i], j].join
+  
+        i += 1
+        j -= 1
+      end
+  
+    elsif diag_left_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+  
+      j = start_loc_row + 1
+      i = columns.index(start_loc_col) - 1
+      while i > columns.index(end_loc_col) && j < end_loc_row
+  
+        intermediate_squares << [columns[i], j].join
+  
+        i -= 1
+        j += 1
+      end
+  
+    elsif diag_left_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+  
+      j = start_loc_row - 1
+      i = columns.index(start_loc_col) - 1
+      while i > columns.index(end_loc_col) && j > end_loc_row
+  
+        intermediate_squares << [columns[i], j].join
+  
+        i -= 1
+        j -= 1
+      end
+    end
+  
+    intermediate_squares
   end
 
   def valid_move?()
