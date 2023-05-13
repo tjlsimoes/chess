@@ -14,6 +14,29 @@ describe Board do
     end
   end
 
+  describe "#notation_to_cell" do
+    context "when given 'd5'" do
+      it "returns 37" do
+        output = board.notation_to_cell("d5")
+        expect(output).to eq(37)
+      end
+    end
+
+    context "when given 'h8'" do
+      it "returns 57" do
+        output = board.notation_to_cell("h8")
+        expect(output).to eq(57)
+      end
+    end
+
+    context "when given 'a1'" do
+      it "returns 8" do
+        output = board.notation_to_cell("a1")
+        expect(output).to eq(8)
+      end
+    end
+  end
+
   describe "#intermediate_squares" do
 
     context "vertical upwards movement" do
@@ -78,7 +101,5 @@ describe Board do
         end
       end
     end
-
-
   end
 end
