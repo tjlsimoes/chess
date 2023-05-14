@@ -121,6 +121,11 @@ class Board
   def nil_or_opponent?(idx_start, idx_end)
     cells[idx_end].nil? || cells[idx_start].colour != cells[idx_end].colour
   end
+
+  def rook_queen_bishop?(idx)
+    cells[idx].kind_of?(Rook) || cells[idx].kind_of?(Queen) || cells[idx].kind_of?(Bishop)
+  end
+
   def diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
     end_loc_col > start_loc_col && end_loc_row > start_loc_row
   end
