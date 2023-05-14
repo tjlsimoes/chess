@@ -70,7 +70,7 @@ class Board
         number = (i / 8) + 1
         letter = columns[8 - (i % 8)]
       else
-        number = i % 8
+        number = i / 8
         letter = "a"
       end
       location = [letter, number].join
@@ -98,7 +98,7 @@ class Board
         number = (i / 8) + 1
         letter = columns[8 - (i % 8)]
       else
-        number = i % 8
+        number = i / 8
         letter = "a"
       end
 
