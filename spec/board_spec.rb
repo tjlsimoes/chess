@@ -6,7 +6,6 @@ describe Board do
   subject(:board) { Board.new }
 
   describe "#initial_board" do
-
     it "returns an array of corectly placed 65 elements" do
       board.show
       output = board.cells # Also works with Board.initial_board
@@ -99,6 +98,107 @@ describe Board do
           output = board.intermediate_squares(%w[d5 h1])
           expect(output).to eq(%w[e4 f3 g2])
         end
+      end
+    end
+  end
+
+  describe "#valid_move?" do
+    context "initial pawn moved two places" do
+      it "returns true" do
+        output = board.valid_move?(['a2', 'a4'])
+        expect(output).to eq(true)
+      end
+    end
+
+    context "bishop moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[37] = Bishop.new("\u265D", "d5")
+        cells[51] = Pawn.new("\u2659", "f7")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.valid_move?(['d5', 'f7'])
+        expect(output).to eq(true)
+      end
+    end
+
+    context "bishop moved to square occupied by opponent's piece but path to it blocked" do
+
+      before do
+        cells = Array.new(65)
+        cells[37] = Bishop.new("\u265D", "d5")
+        cells[44] = Bishop.new("\u265D", "e6")
+        cells[51] = Pawn.new("\u2659", "f7")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.valid_move?(['d5', 'f7'])
+        expect(output).to eq(false)
+      end
+    end
+
+    context "rook moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[57] = Rook.new("\u265C", "h8")
+        cells[9] = Pawn.new("\u2659", "h2")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.valid_move?(['h8', 'h2'])
+        expect(output).to eq(true)
+      end
+    end
+
+    context "rook moved to square occupied by opponent's piece but path to it blocked" do
+
+      before do
+        cells = Array.new(65)
+        cells[57] = Rook.new("\u265C", "h8")
+        cells[33] = Pawn.new("\u2659", "h5")
+        cells[9] = Pawn.new("\u2659", "h2")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.valid_move?(['h8', 'h2'])
+        expect(output).to eq(false)
+      end
+    end
+
+    context "queen moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[61] = Queen.new("\u265A", "d8")
+        cells[37] = Pawn.new("\u2659", "d5")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.valid_move?(['d8', 'd5'])
+        expect(output).to eq(true)
+      end
+    end
+
+    context "knight moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[58] = Knight.new("\u265E", "g8")
+        cells[41] = Pawn.new("\u2659", "h6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.valid_move?(['g8', 'h6'])
+        expect(output).to eq(true)
       end
     end
   end
