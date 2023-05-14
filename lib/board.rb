@@ -111,14 +111,16 @@ class Board
   end
 
   def notation_to_cell(coordinate)
+    columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
     column = coordinate[0]
     row = coordinate[1].to_i
-  
-    columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
-  
+
     cell = row * 8 - columns.index(column)
   end
 
+  def nil_or_opponent?(idx_start, idx_end)
+    cells[idx_end].nil? || cells[idx_start].colour != cells[idx_end].colour
+  end
   def diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
     end_loc_col > start_loc_col && end_loc_row > start_loc_row
   end
