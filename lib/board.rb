@@ -61,8 +61,8 @@ class Board
     cells[59] = Bishop.new("\u265D", "f8")
     cells[62] = Bishop.new("\u265D", "c8")
 
-    cells[60] = Queen.new("\u265A", "d8")
-    cells[61] = King.new("\u265B", "e8")
+    cells[61] = Queen.new("\u265B", "d8")
+    cells[60] = King.new("\u265A", "e8")
 
     for i in (49..56) do
 
