@@ -122,6 +122,14 @@ class Board
     cells[idx_end].nil? || cells[idx_start].colour != cells[idx_end].colour
   end
 
+  def opponent?(idx_start, idx_end)
+    if cells[idx_end].nil?
+      false
+    elsif cells[idx_start].colour != cells[idx_end].colour
+      true
+    end
+  end
+
   def rook_queen_bishop?(idx)
     cells[idx].kind_of?(Rook) || cells[idx].kind_of?(Queen) || cells[idx].kind_of?(Bishop)
   end
