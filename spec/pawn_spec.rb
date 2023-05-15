@@ -7,30 +7,30 @@ describe Pawn do
 
   describe "#possible_moves" do
     describe "at position d5 with results sorted" do
-      it "returns %w[c6 d6 e6]" do
+      it "returns %w[d6]" do
         pawn.instance_variable_set(:@unmoved, false)
         output = pawn.possible_moves
-        expect(output.sort).to eq(%w[c6 d6 e6])
+        expect(output.sort).to eq(%w[d6])
       end
     end
 
     describe "at position d2 with @unmoved == true and results sorted" do
       subject(:pawn) { Pawn.new("\u2659", "d2")}
 
-      it "returns %w[c3 d3 d4 e3]" do
+      it "returns %w[d3 d4]" do
         pawn.instance_variable_set(:@unmoved, true)
         output = pawn.possible_moves
-        expect(output.sort).to eq(%w[c3 d3 d4 e3])
+        expect(output.sort).to eq(%w[d3 d4])
       end
     end
 
     describe "at position a2 with @unmoved == true and results sorted" do
       subject(:pawn) { Pawn.new("\u2659", "a2")}
 
-      it "returns %w[a3 a4 b3]" do
+      it "returns %w[a3 a4]" do
         pawn.instance_variable_set(:@unmoved, true)
         output = pawn.possible_moves
-        expect(output.sort).to eq(%w[a3 a4 b3])
+        expect(output.sort).to eq(%w[a3 a4])
       end
     end
   end
