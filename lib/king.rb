@@ -12,9 +12,9 @@ class King
 
   def get_colour
     if symbol == "\u2654"
-      "white"
-    else
       "black"
+    else
+      "white"
     end
   end
 

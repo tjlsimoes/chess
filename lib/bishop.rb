@@ -12,9 +12,9 @@ class Bishop
 
   def get_colour
     if symbol == "\u2657"
-      "white"
-    else
       "black"
+    else
+      "white"
     end
   end
 

@@ -12,9 +12,9 @@ class Rook
 
   def get_colour
     if symbol == "\u2656"
-      "white"
-    else
       "black"
+    else
+      "white"
     end
   end
 

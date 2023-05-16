@@ -12,9 +12,9 @@ class Queen
 
   def get_colour
     if symbol == "\u2655"
-      "white"
-    else
       "black"
+    else
+      "white"
     end
   end
 

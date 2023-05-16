@@ -12,9 +12,9 @@ class Knight
 
   def get_colour
     if symbol == "\u2658"
-      "white"
-    else
       "black"
+    else
+      "white"
     end
   end
 

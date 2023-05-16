@@ -7,19 +7,19 @@ describe Knight do
   subject(:knight) { Knight.new("\u2658", "d5")}
 
   describe "#get_colour" do
-    describe "when symbol is white" do
-      it "returns 'white'" do
-        output = knight.get_colour
-        expect(output).to eq('white')
-      end
-    end
-
     describe "when symbol is black" do
-      subject(:knight) { Knight.new("\u265E", "d5")}
-
       it "returns 'black'" do
         output = knight.get_colour
         expect(output).to eq('black')
+      end
+    end
+
+    describe "when symbol is white" do
+      subject(:knight) { Knight.new("\u265E", "d5")}
+
+      it "returns 'white'" do
+        output = knight.get_colour
+        expect(output).to eq('white')
       end
     end
   end

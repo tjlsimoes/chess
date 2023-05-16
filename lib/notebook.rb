@@ -1502,3 +1502,10 @@
 # black and white chess pieces references.
 # However the command line inverts the chess
 # pieces' colours!!!
+
+############### 16 May #####################
+
+# Point to be worked on:
+# - Correct initial_board and chess piece's
+#   colour evaluation for there to be a match
+#   between visual output and game mechanics.

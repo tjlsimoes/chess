@@ -13,9 +13,9 @@ class Pawn
 
   def get_colour
     if symbol == "\u2659"
-      "white"
-    else
       "black"
+    else
+      "white"
     end
   end
 

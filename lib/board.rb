@@ -50,19 +50,19 @@ class Board
     cells = Array.new(65)
     columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
-    # Black chess pieces.
+    # Black chess pieces (due to colour contrast with CLI).
 
-    cells[57] = Rook.new("\u265C", "h8")
-    cells[64] = Rook.new("\u265C", "a8")
+    cells[57] = Rook.new("\u2656", "h8")
+    cells[64] = Rook.new("\u2656", "a8")
 
-    cells[58] = Knight.new("\u265E", "g8")
-    cells[63] = Knight.new("\u265E", "b8")
+    cells[58] = Knight.new("\u2658", "g8")
+    cells[63] = Knight.new("\u2658", "b8")
 
-    cells[59] = Bishop.new("\u265D", "f8")
-    cells[62] = Bishop.new("\u265D", "c8")
+    cells[59] = Bishop.new("\u2657", "f8")
+    cells[62] = Bishop.new("\u2657", "c8")
 
-    cells[61] = Queen.new("\u265B", "d8")
-    cells[60] = King.new("\u265A", "e8")
+    cells[61] = Queen.new("\u2655", "d8")
+    cells[60] = King.new("\u2654", "e8")
 
     for i in (49..56) do
 
@@ -75,22 +75,22 @@ class Board
       end
       location = [letter, number].join
 
-      cells[i] = Pawn.new("\u265F", location)
+      cells[i] = Pawn.new("\u2659", location)
     end
 
-    # White chess pieces.
+    # White chess pieces (due to contrast with CLI).
 
-    cells[1] = Rook.new("\u2656", "h1")
-    cells[8] = Rook.new("\u2656", "a1")
+    cells[1] = Rook.new("\u265C", "h1")
+    cells[8] = Rook.new("\u265C", "a1")
 
-    cells[2] = Knight.new("\u2658", "g1")
-    cells[7] = Knight.new("\u2658", "b1")
+    cells[2] = Knight.new("\u265E", "g1")
+    cells[7] = Knight.new("\u265E", "b1")
 
-    cells[3] = Bishop.new("\u2657", "f1")
-    cells[6] = Bishop.new("\u2657", "c1")
+    cells[3] = Bishop.new("\u265D", "f1")
+    cells[6] = Bishop.new("\u265D", "c1")
 
-    cells[4] = King.new("\u2654", "e1")
-    cells[5] = Queen.new("\u2655", "d1")
+    cells[4] = King.new("\u265A", "e1")
+    cells[5] = Queen.new("\u265B", "d1")
 
     for i in (9..16) do
 
@@ -104,7 +104,7 @@ class Board
 
       location = [letter, number].join
 
-      cells[i] = Pawn.new("\u2659", location)
+      cells[i] = Pawn.new("\u265F", location)
     end
 
     cells

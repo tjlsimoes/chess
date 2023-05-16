@@ -36,19 +36,19 @@ describe Pawn do
   end
 
   describe "#get_colour" do
-    context "when symbol is white" do
-      it "returns 'white'" do
-        output = pawn.get_colour
-        expect(output).to eq('white')
-      end
-    end
-
     context "when symbol is black" do
-      subject(:pawn) { Pawn.new("\u265F", "d5")}
-
       it "returns 'black'" do
         output = pawn.get_colour
         expect(output).to eq('black')
+      end
+    end
+
+    context "when symbol is white" do
+      subject(:pawn) { Pawn.new("\u265F", "d5")}
+
+      it "returns 'white'" do
+        output = pawn.get_colour
+        expect(output).to eq('white')
       end
     end
   end
