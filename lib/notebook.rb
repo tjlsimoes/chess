@@ -510,7 +510,8 @@
 # needed.
 
 ######### Conversion from notation to index:
-# cell == number * 8 -(8 - letter)
+# cell == number * 8 -(8 - letter) ### Wrong!!!
+# cell == number * 8 - letter
 
 ######### Conversion from index to notation:
 # columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
@@ -518,8 +519,8 @@
 #   number = (cell / 8) + 1
 #   columns[8 - (cell % 8)]
 # else
-#   number = cell % 8
-#   letter = a
+#   number = cell / 8   ### Corrected!!!
+#   letter = "a"
 
 
 ############### 6 May ######################
@@ -964,7 +965,7 @@
 # thought as something as simple as checking
 # whether or not the designated chess piece
 # at the specified location included the
-# desired location in its respecitve
+# desired location in its respective
 # possible_moves method output.
 
 # Things don't seem, however, to be that
@@ -995,3 +996,509 @@
 
 # Problem to be tackled:
 # - Duly populate Board with initial board.
+
+# Problem solved:
+# ✓ Duly populate Board with initial board.
+
+# The next most immmediate logic step in
+# that direction seems to be to work
+# on Board#valid_move? and Board#update_board
+# methods.
+
+# Conceptually Board#valid_move? was being
+# thought as something as simple as checking
+# whether or not the designated chess piece
+# at the specified location included the
+# desired location in its respective
+# possible_moves method output.
+
+# However as #possible_moves is currently
+# implemented that logic is not enough.
+
+# #possible_moves does not take in account:
+# - Impeded lines to certain squares by other
+# chess pieces.
+# - As regards to Pawn it contains "possibly
+#   not possible" positions: diagonal takes.
+# - It also doesn't take into account:
+#   en passant, castling, chess piece's
+#   exchange.
+# - Restrictions on moves due to mate and
+#   checkmate.
+
+# Question seems to be:
+# How ought these problems to be adrressed?
+# - Do they call for a refactor of
+#   #possible_moves?
+# - Or ought #possible_moves to stay as is
+#   and adress these problems at the level
+#   of the Board#valid_move? ?
+
+# Perhaps a combination of both answers is
+# the way to go.
+
+# If these problems were to be addressed at
+# the level of Board#valid_move?, what
+# concrete solutions would have to be
+# put forward?
+
+# What mechanism could be implemented so as
+# to prevent assumption of certain squares
+# as possible moves, regardless of the path
+# towards them being blocked?
+
+# A certain dependency between possible moves
+# would have to be implemented.
+# Such that when some or one is not possible
+# it would have a cascading effect on the
+# possible moves: they would seize to be
+# taken as possible moves.
+
+# With the current possible_moves method,
+# Board#valid_move? can not be as simple as
+# checking if desired end position for a
+# given chess piece is included in its
+# possible_moves method output.
+# It has also to check:
+# (a) If end-position is free or occupied
+#     by an opponent's chess piece.
+# (b) If path to desired location is blocked.
+# (c) Pawn's disparate possible movements.
+# (d) Mate and checkmate conditions.
+# (e) Castling, en passant, exchange.
+
+# If (a) was the only problem, the solution
+# would be simple:
+# To the verification that the end-position
+# would be on #possible_moves output, extra
+# conditions would have to be placed: for it
+# to be either free or occupied by an
+# opponent's chess piece. The latter case
+# would then have to result in a peculiar
+# form of Board#update_board. Not only would
+# it have to remove and relocate one piece,
+# but also remove another entirely from the
+# board.
+
+# Problem (b) calls for the evalution of the
+# board status in certain possible lines of
+# movement.
+
+# In light of problem (b) it seems that a
+# certain definition of the relation between
+# the designated piece location and its
+# desired end-location has to be defined.
+
+# If it requires an horizontal movement, to
+# the left or to the right.
+# If it requires a vertical movement, upwards
+# or downwards.
+# If it requires a diagonal movement, in any
+# of the 4 possible directions:
+# - right upwards;        # - left upwards;
+# - right downwards;      # - left downwads;
+
+# In light of this valid_move? ought to still
+# check if desired end-positon would be
+# included in the piece's #possible_moves.
+# But it would have to additionally define
+# the relation between location and
+# end-location so as to avoid making
+# impossible moves (path being blocked).
+
+# Moreover it seems that problem (b) only
+# concerns certain pieces: rook, bishop,
+# queen.
+
+# How could one extract the type of movement
+# involved in a certain play from the user
+# input of piece-location and desired
+# piece end-location?
+
+# Horizontal movement:
+# Same row, different collumn.
+# If end-column > initial-column: (i)
+#     horizontal to the right;
+# If end-column < initial-column: (ii)
+#     horizontal to the right;
+
+# Vertical movement:
+# Same column, different row.     (I)
+# If end-row > initial-row:
+#     vertical upwards
+# If end-row < initial-row:       (II)
+#     vertical downwards
+
+# Diagonal movement:
+# (i), (I): right upwards;
+# (i), (II): right downwards;
+# (ii), (I): left upwards;
+# (ii), (II): left downwards;
+
+# Based on this information it could
+# be verified whether all positions
+# between chess piece location and its
+# desired end-location are free.
+
+# For horizontal and vertical movement
+# the code for that seems somewhat
+# straightforward.
+
+# Horizontal movement:
+# Maintain row, change column by factor
+# of 1, incresing or decreasing in light
+# of specific horizontal movement.
+# Of course, an equiparation between
+# numbers and columns would have to be made
+# here.
+
+# Vertical movement:
+# Maintain column, change row by factor of 1,
+# increasing or decreasing in light of
+# specific vertical movement.
+
+# Diagonal movement seems a bit more complex.
+
+# Diagonal movement:
+# Both column and row would have to vary.
+# And perhaps vary differently in light of
+# specific diagonal movement.
+# Diagonal movement would correspond to the
+# combined variation of the row and column
+# by a factor of 1, in light of the specific
+# diagonal movement.
+
+# Different moments of functionality:
+# - Assess type of movement;
+# - Check if there are pieces between
+#   initial-location and end-location.
+
+##### Board#valid_move? high-level overview:
+# 1. Check if end-location is in
+#    #possible_moves.
+# 2. Check if end-location is nil or an
+#    opponent chess-piece.
+# 3. Assess type of movement.
+# 4. Check if there are pieces between
+#    initial-location and end-location.
+
+
+############### 11 May #####################
+
+# Point to be worked on:
+# - Board#valid_move?
+
+##### Board#valid_move? high-level overview:
+# 1. Check if end-location is in
+#    #possible_moves.
+# 2. Check if end-location is nil or an
+#    opponent chess-piece.
+# 3. Assess type of movement.
+# 4. Check if there are pieces between
+#    initial-location and end-location.
+
+# Assuming Board#valid_move? will take an
+# array with two string values - corresponding
+# to the two locations from user input - as
+# input, how ought the assessment of the
+# type of movement look like?
+
+# Board#valid_move? ought, then, to look like
+# something like:
+
+# def intermediate_squares(user_input)
+
+#   start_loc = user_input[0]
+#   end_loc = user_input[1]
+
+#   start_loc_col = start_loc[0]
+#   start_loc_row = start_loc[1].to_i
+
+#   end_loc_col = end_loc[0]
+#   end_loc_row = end_loc[1].to_i
+
+#   # No precaution here set for same end and
+#   # starting location.
+
+#   intermediate_squares = []
+#   columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+#   if start_loc_col == end_loc_col # vertical movement
+
+#     if start_loc_row > end_loc_row # downwards
+
+#       i = start_loc_row - 1
+#       while i > end_loc_row
+
+#         intermediate_squares << [start_loc_col, i].join
+#         i -= 1
+#       end
+
+#     else # upwards
+
+#       i = start_loc_row + 1
+#       while i < end_loc_row
+
+#         intermediate_squares << [start_loc_col, i].join
+#         i += 1
+#       end
+#     end
+
+#   elsif start_loc_row == end_loc_row # horizontal movement
+
+#     if start_loc_column > end_loc_row # to the left
+
+#       i = columns.index(start_loc_col) - 1
+#       while i > columns.index(end_loc_col)
+
+#         intermediate_squares << [columns[i], start_loc_row].join
+#         i -= 1
+#       end
+#     else # to the right
+
+#       i = columns.index(start_loc_col) + 1
+#       while i < columns.index(end_loc_col)
+
+#         intermediate_squares << [columns[i], start_loc_row].join
+#         i += 1
+#       end
+#     end
+
+#   elsif diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+
+#     j = start_loc_row + 1
+#     i = columns.index(start_loc_col) + 1
+#     while i < columns.index(end_loc_col) && j < end_loc_row
+
+#       intermediate_squares << [columns[i], j].join
+
+#       i += 1
+#       j += 1
+#     end
+
+#   elsif diag_right_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+
+#     j = start_loc_row - 1
+#     i = columns.index(start_loc_col) + 1
+#     while i < columns.index(end_loc_col) && j > end_loc_row
+
+#       intermediate_squares << [columns[i], j].join
+
+#       i += 1
+#       j -= 1
+#     end
+
+#   elsif diag_left_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+
+#     j = start_loc_row + 1
+#     i = columns.index(start_loc_col) - 1
+#     while i > columns.index(end_loc_col) && j < end_loc_row
+
+#       intermediate_squares << [columns[i], j].join
+
+#       i -= 1
+#       j += 1
+#     end
+
+#   elsif diag_left_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+
+#     j = start_loc_row - 1
+#     i = columns.index(start_loc_col) - 1
+#     while i > columns.index(end_loc_col) && j > end_loc_row
+
+#       intermediate_squares << [columns[i], j].join
+
+#       i -= 1
+#       j -= 1
+#     end
+#   end
+
+#   intermediate_squares
+# end
+
+# user_input = ["d5", "d2"]
+# p intermediate_squares(user_input)
+
+# Diagonal movement could more than likely
+# benefit from a set of helper functions.
+
+# Previous annotations: 
+
+# Horizontal movement:
+# Same row, different collumn.
+# If end-column > initial-column: (i)
+#     horizontal to the right;
+# If end-column < initial-column: (ii)
+#     horizontal to the right;
+
+# Vertical movement:
+# Same column, different row.     (I)
+# If end-row > initial-row:
+#     vertical upwards
+# If end-row < initial-row:       (II)
+#     vertical downwards
+
+# Diagonal movement:
+# (i), (I): right upwards;
+# (i), (II): right downwards;
+# (ii), (I): left upwards;
+# (ii), (II): left downwards;
+
+
+# def diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+#   end_loc_col > start_loc_col && end_loc_row > start_loc_row
+# end
+
+# def diag_right_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+#   end_loc_col > start_loc_col && start_loc_row > end_loc_row
+# end
+
+# def diag_left_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+#   start_loc_col > end_loc_col && end_loc_row > start_loc_row
+# end
+
+# def diag_left_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
+#   start_loc_col > end_loc_col && start_loc_row > end_loc_row
+# end
+
+
+# Current situation as regards to
+# Board#valid_move?:
+# As of right now, code up above ought to
+# identify type of movement and output the
+# intermediate squares to be verified.
+
+
+############### 13 May #####################
+
+# Point to be worked on:
+# - Board#valid_move?
+
+##### Board#valid_move? high-level overview:
+# 1. Translate selected piece's location
+#    to respective board cell.
+# 2. Check if end-location is in
+#    #possible_moves.
+# 3. Check if end-location is nil or an
+#    opponent chess-piece.
+# 4. Assess type of movement.
+# 5. Check if there are pieces between
+#    initial-location and end-location.
+
+# def notation_to_cell(coordinate)
+#   column = coordinate[0]
+#   row = coordinate[1].to_i
+
+#   columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+#   cell = row * 8 - columns.index(column)
+# end
+
+# p notation_to_cell("h7")
+
+# How to check if end-location contains
+# an opponent's piece?
+# More than likely through the constant
+# variations on the symbol instance
+# variable.
+
+# Black chess pieces' symbols end with a
+# letter.
+# White chess pieces' symbols end with a
+# number.
+
+# Can't seem to make that work.
+# Alternative: add a colour instance variable
+# to each chess piece...
+
+# - Fix bug on pawn definition on
+#     Board#initial_board
+# - Add Board#nil_or_opponent?
+# - Add Board#rook_queen_bishop?
+# - Implement rough version of
+#     Board#valid_move?
+
+############### 14 May #####################
+
+# - Fix bug on pawn definition on
+#     Board#initial_board
+# - Add Board#nil_or_opponent?
+# - Add Board#rook_queen_bishop?
+# - Implement rough version of
+#     Board#valid_move?
+# - Fix bug on queen definition on
+#     Board#initial_board (black chess
+#     pieces).
+# - Remove trailing white-space
+
+# Board#valid_move? has also to check:
+# (a) If end-position is free or occupied
+#     by an opponent's chess piece. ✓
+# (b) If path to desired location is blocked. ✓
+# (c) Pawn's disparate possible movements.
+# (d) Mate and checkmate conditions.
+# (e) Castling, en passant, exchange.
+
+# How could pawn's disparate possible
+# be accounted for?
+# Focusing, for now, on the possible
+# two-square initial move, the possible
+# diagonal move to take an opponent piece
+# and the impossibility of forward movement
+# if any piece lays immediately ahead.
+
+# It seems as if pawn pieces require a
+# separate treatment within Board#valid_move?
+
+############### 15 May #####################
+
+# Point to be worked on:
+# - Articulation between pawn's disparate
+#   possible movements and Board#valid_move?
+
+# Current problems with the articulation
+# between Pawn#possible_moves? and
+# Board#valid_move?:
+# - Board#intermediate_squares is not called
+#   when pawn is to be moved two squares.
+# - Pawn's forward movements ought not to be
+#   considered possibles if said square is
+#   occupied either by a "friendly" chess
+#   or by an opponent's chess piece!
+# - As of right now pawn's possible diagonal
+#   movements are always valid. And not only
+#   when there are opponent's pieces on the
+#   end-square selected.
+
+# How could these problems be solved?
+# Let's try and think this through.
+# A pawn's move will be valid if:
+# - Moved one square forward to an unoccupied
+#   square.
+# - Moved two squares forward to an unoccupied
+#   square if intermediate square is not
+#   occupied and pawn to be moved has not yet
+#   been moved.
+# - Moved to the right or left diagonal
+#   square occupied by an opponent's piece.
+# - [En passant.]
+
+# if row + 1 && unoccupied
+# if row + 2 && unoccupied && unmoved == true
+# if row + 1, column +/- 1 && occupied opponent
+
+# Chess pieces are wrongly set on the chess
+# board... Black chess pieces are where white
+# chess pieces are meant to be...
+
+# Point to be worked on:
+# ✓ Articulation between pawn's disparate
+#   possible movements and Board#valid_move?
+# (roughly though and in need of refactor).
+# - Board#initial_board: chess pieces'
+#   correct placement.
+
+# Board is initially correctly filled with
+# black and white chess pieces references.
+# However the command line inverts the chess
+# pieces' colours!!!

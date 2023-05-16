@@ -103,10 +103,129 @@ describe Board do
   end
 
   describe "#valid_move?" do
-    context "initial pawn moved two places" do
+
+    context "initial pawn moved two squares" do
       it "returns true" do
         output = board.valid_move?(['a2', 'a4'])
         expect(output).to eq(true)
+      end
+    end
+
+    context "initial pawn moved one square" do
+      it "returns true" do
+        output = board.valid_move?(['a2', 'a3'])
+        expect(output).to eq(true)
+      end
+    end
+
+    context "pawn moved one square to occupied square" do
+      before do
+        cells = Array.new(65)
+        cells[9] = Pawn.new("\u265F", "h2")
+        cells[17] = Pawn.new("\u2659", "h3")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.valid_move?(['h2', 'h3'])
+        expect(output).to eq(false)
+      end
+    end
+
+    context "pawn moved two squares but intermediate square is occupied" do
+      before do
+        cells = Array.new(65)
+        cells[9] = Pawn.new("\u265F", "h2")
+        cells[17] = Pawn.new("\u2659", "h3")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.valid_move?(['h2', 'h4'])
+        expect(output).to eq(false)
+      end
+    end
+
+    context "pawn moved two squares but @unmoved == false" do
+      before do
+        cells = Array.new(65)
+        cells[9] = Pawn.new("\u265F", "h2")
+        cells[9].instance_variable_set(:@unmoved, false)
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.valid_move?(['h2', 'h4'])
+        expect(output).to eq(false)
+      end
+    end
+
+    context "pawn moved two squares to occupied square" do
+      before do
+        cells = Array.new(65)
+        cells[9] = Pawn.new("\u265F", "h2")
+        cells[25] = Pawn.new("\u2659", "h4")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.valid_move?(['h2', 'h4'])
+        expect(output).to eq(false)
+      end
+    end
+
+    context "pawn moved diagonally right to take opponent chess piece" do
+      before do
+        cells = Array.new(65)
+        cells[37] = Pawn.new("\u265F", "d5")
+        cells[44] = Pawn.new("\u2659", "e6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.valid_move?(['d5', 'e6'])
+        expect(output).to eq(true)
+      end
+    end
+
+    context "pawn moved diagonally left to take opponent chess piece" do
+      before do
+        cells = Array.new(65)
+        cells[37] = Pawn.new("\u265F", "d5")
+        cells[46] = Pawn.new("\u2659", "c6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.valid_move?(['d5', 'c6'])
+        expect(output).to eq(true)
+      end
+    end
+
+    context "pawn moved diagonally left to unoccupied square" do
+      before do
+        cells = Array.new(65)
+        cells[37] = Pawn.new("\u265F", "d5")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.valid_move?(['d5', 'c6'])
+        expect(output).to eq(false)
+      end
+    end
+
+    context "pawn moved diagonally left two squares to take opponent chess piece" do
+      before do
+        cells = Array.new(65)
+        cells[55] = Pawn.new("\u2659", "b7")
+        cells[37] = Pawn.new("\u265F", "d5")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.valid_move?(['d5', 'b7'])
+        expect(output).to eq(false)
       end
     end
 

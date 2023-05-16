@@ -260,7 +260,24 @@ class Board
     intermediate_squares
   end
 
+  def pawn_valid_move?(start_loc, end_loc, idx_start_loc, idx_end_loc, user_input)
+    columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+    start_column = columns.index(start_loc[0])
+    column_vars = [columns[start_column + 1]]
+    column_vars << columns[start_column - 1] if start_column - 1 > 0
+
+    if cells[idx_start_loc].possible_moves.include?(end_loc) && intermediate_squares(user_input).all? { |square| cells[notation_to_cell(square)] == nil} && cells[idx_end_loc].nil?
+      true
+    elsif column_vars.include?(end_loc[0]) && end_loc[1].to_i == start_loc[1].to_i + 1 && opponent?(idx_start_loc, idx_end_loc)
+      true
+    else
+      false
+    end
+  end
+
   def valid_move?(user_input)
+    start_loc = user_input[0]
     end_loc = user_input[1]
 
     idx_start_loc = notation_to_cell(user_input[0])
@@ -269,6 +286,8 @@ class Board
     if rook_queen_bishop?(idx_start_loc)
       cells[idx_start_loc].possible_moves.include?(end_loc) && nil_or_opponent?(idx_start_loc, idx_end_loc) &&
         intermediate_squares(user_input).all? { |square| cells[notation_to_cell(square)] == nil}
+    elsif cells[idx_start_loc].is_a?(Pawn)
+      pawn_valid_move?(start_loc, end_loc, idx_start_loc, idx_end_loc, user_input)
     else
       cells[idx_start_loc].possible_moves.include?(end_loc) && nil_or_opponent?(idx_start_loc, idx_end_loc)
     end
