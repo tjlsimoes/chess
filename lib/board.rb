@@ -297,7 +297,20 @@ class Board
     
   end
 
-  def update_board()
-  
+  def unmoved_pawn?(idx)
+    cells[idx].is_a?(Pawn) && cells[idx].unmoved == true
+  end
+
+  def update_board(user_input)
+    end_loc = user_input[1]
+
+    idx_start_loc = notation_to_cell(user_input[0])
+    idx_end_loc = notation_to_cell(user_input[1])
+
+    cells[idx_start_loc].location = end_loc
+    cells[idx_end_loc] = cells[idx_start_loc]
+    cells[idx_start_loc] = nil
+
+    cells[idx_end_loc].unmoved = false if unmoved_pawn?(idx_end_loc)
   end
 end

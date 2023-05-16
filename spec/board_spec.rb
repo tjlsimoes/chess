@@ -321,4 +321,108 @@ describe Board do
       end
     end
   end
+
+  describe "#update_board" do
+
+    context "initial pawn moved two squares" do
+      it "returns piece with updated location" do
+        expected = board.cells[16]
+        expected.instance_variable_set(:@location,"a4")
+        board.update_board(['a2', 'a4'])
+        target_square = board.cells[32]
+
+        expect(target_square).to eq(expected)
+      end
+    end
+
+    context "initial pawn moved two squares" do
+      it "@unmoved updated to false" do
+        board.update_board(['a2', 'a4'])
+        pawn = board.cells[32]
+
+        expect(pawn.unmoved).to eq(false)
+      end
+    end
+
+    context "initial pawn moved two squares" do
+      it "returns piece with updated location" do
+        expected = board.cells[16]
+        expected.instance_variable_set(:@location,"a3")
+        board.update_board(['a2', 'a3'])
+        target_square = board.cells[24]
+
+        expect(target_square).to eq(expected)
+      end
+    end
+
+    context "pawn moved diagonally right to take opponent chess piece" do
+      before do
+        cells = Array.new(65)
+        cells[37] = Pawn.new("\u265F", "d5")
+        cells[44] = Pawn.new("\u2659", "e6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns piece with updated location" do
+        expected = board.cells[37]
+        expected.instance_variable_set(:@location,"e6")
+        board.update_board(['d5', 'e6'])
+        target_square = board.cells[44]
+
+        expect(target_square).to eq(expected)
+      end
+    end
+
+    context "pawn moved diagonally right to take opponent chess piece" do
+      before do
+        cells = Array.new(65)
+        cells[37] = Pawn.new("\u265F", "d5")
+        cells[44] = Pawn.new("\u2659", "e6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "starting square is updated to nil" do
+        board.update_board(['d5', 'e6'])
+        start_square = board.cells[37]
+
+        expect(start_square).to be_nil
+      end
+    end
+
+    context "bishop moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[37] = Bishop.new("\u265D", "d5")
+        cells[51] = Pawn.new("\u2659", "f7")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns piece with updated location" do
+        expected = board.cells[37]
+        expected.instance_variable_set(:@location,"f7")
+        board.update_board(['d5', 'f7'])
+        target_square = board.cells[51]
+
+        expect(target_square).to eq(expected)
+      end
+    end
+
+    context "bishop moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[37] = Bishop.new("\u265D", "d5")
+        cells[51] = Pawn.new("\u2659", "f7")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "starting square is updated to nil" do
+        board.update_board(['d5', 'f7'])
+        start_square = board.cells[37]
+
+        expect(start_square).to be_nil
+      end
+    end
+  end
 end

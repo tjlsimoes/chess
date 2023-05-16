@@ -1506,6 +1506,37 @@
 ############### 16 May #####################
 
 # Point to be worked on:
-# - Correct initial_board and chess piece's
+# ✓ Correct initial_board and chess piece's
 #   colour evaluation for there to be a match
 #   between visual output and game mechanics.
+
+# Board#valid_move? has also to check:
+# (a) If end-position is free or occupied
+#     by an opponent's chess piece. ✓
+# (b) If path to desired location is blocked. ✓
+# (c) Pawn's disparate possible movements. ✓
+# (d) Mate and checkmate conditions.
+# (e) Castling, en passant, exchange.
+
+# With this provisional Board#valid_move?
+# work can perhaps be done on
+# Board#update_board.
+
+# Board#update_board ought to work based
+# on validated user input.
+# At least for now it ought to work in
+# regard to two possible cases:
+# (a) end_loc == nil;
+# (b) end_loc != nil;
+
+# Case (b) regards a possible take movement.
+# For now there seems no need to store
+# the taken pieces in any variable.
+# Hence, case (b) ought to be analogous to
+# case (a): redefinition of two array
+# elements.
+
+# Board#update_board ought perhaps also to
+# update pawn's unmoved instance variable
+# if piece to be moved is a pawn.
+# ✓ Done.
