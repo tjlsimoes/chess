@@ -22,9 +22,17 @@ class Game
   end
 
   def turn(player)
-    ### = turn_input(player)
-    board.update_board()
+    user_input = turn_input(player)
+    board.update_board(user_input)
     board.show
+  end
+
+  def valid_input?(user_input)
+    separator = (user_input[2] == "-")
+    letters = [user_input[0], user_input[3]].all? {|letter| Array('a'..'h').include?(letter)}
+    numbers = [user_input[1], user_input[4]].all? {|number| Array(1..8).include?(number.to_i)}
+
+    separator && letters && numbers
   end
 
   private
@@ -33,16 +41,17 @@ class Game
     @current_player = first_player
     until board.game_over?
       turn(current_player)
-      
-
       @current_player = switch_current_player
     end
   end
 
   def turn_input(player)
-    # puts display_player_turn()
-    # number = gets.chomp.to_i
-    # return number if (1..7).include?(number) && board.valid_move?(number)
+    puts display_player_turn(player.name)
+    user_input_orig = gets.chomp
+    user_input = user_input_orig.split("-")
+    p valid_input?(user_input_orig)
+    p board.valid_move?(user_input)
+    return user_input if valid_input?(user_input_orig) && board.valid_move?(user_input)
 
     puts display_input_warning
     turn_input(player)

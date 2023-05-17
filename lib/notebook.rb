@@ -1540,3 +1540,9 @@
 # update pawn's unmoved instance variable
 # if piece to be moved is a pawn.
 # ✓ Done.
+
+# Having Board#update_board and
+# Board#valid_move? sketched out it is
+# perhaps time to look into getting that
+# user input.
+

@@ -137,15 +137,15 @@ class Board
   def diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
     end_loc_col > start_loc_col && end_loc_row > start_loc_row
   end
-  
+
   def diag_right_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
     end_loc_col > start_loc_col && start_loc_row > end_loc_row
   end
-  
+
   def diag_left_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
     start_loc_col > end_loc_col && end_loc_row > start_loc_row
   end
-  
+
   def diag_left_down?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
     start_loc_col > end_loc_col && start_loc_row > end_loc_row
   end
@@ -294,7 +294,7 @@ class Board
   end
 
   def game_over?
-    
+    false
   end
 
   def unmoved_pawn?(idx)

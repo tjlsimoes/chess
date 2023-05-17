@@ -7,8 +7,8 @@ module Display
 		"Let's play a simple chess game in the console! \n\n"
 	end
 
-	def display_player_turn()
-    
+	def display_player_turn(name)
+    "#{name}, please select the piece you would like to move and the position to which you would like to move it to, e.g. d5-e6"
   end
 
 	def display_input_warning
