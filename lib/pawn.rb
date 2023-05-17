@@ -20,18 +20,38 @@ class Pawn
   end
 
   def possible_moves
-    possible_moves = []
-
     coordinates = location.split("")
     row = coordinates[1].to_i
 
+      if colour == "white"
+        white_possible_moves(coordinates, row)
+      else
+        black_possible_moves(coordinates, row)
+      end
+  end
+
+  def white_possible_moves(coordinates, row)
+    possible_moves = []
+
       if @unmoved 
         possible_moves << [coordinates[0], row + 1].join if row + 1 <= 8
-        possible_moves << [coordinates[0], row + 2].join if row + 1 <= 8
+        possible_moves << [coordinates[0], row + 2].join if row + 2 <= 8
       else
         possible_moves << [coordinates[0], row + 1].join if row + 1 <= 8
       end
 
+    possible_moves
+  end
+
+  def black_possible_moves(coordinates, row)
+    possible_moves = []
+
+    if @unmoved 
+      possible_moves << [coordinates[0], row - 1].join if row - 1 >= 0
+      possible_moves << [coordinates[0], row - 2].join if row - 2 >= 0
+    else
+      possible_moves << [coordinates[0], row - 1].join if row - 1 >= 0
+    end
 
     possible_moves
   end
