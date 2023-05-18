@@ -24,9 +24,9 @@ class King
 
     coordinates = location.split("")
     column_idx = columns.index(coordinates[0])
-  
+
     column_vars = [columns[column_idx - 1], coordinates[0], columns[column_idx + 1]]
-  
+
     row = coordinates[1].to_i
     column = coordinates[0]
     coordinates = [column, row]
