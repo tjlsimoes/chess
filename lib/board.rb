@@ -4,6 +4,7 @@ require_relative "bishop.rb"
 require_relative "king.rb"
 require_relative "queen.rb"
 require_relative "pawn.rb"
+
 # Chess board
 
 class Board
@@ -270,6 +271,8 @@ class Board
     if cells[idx_start_loc].possible_moves.include?(end_loc) && intermediate_squares(user_input).all? { |square| cells[notation_to_cell(square)] == nil} && cells[idx_end_loc].nil?
       true
     elsif column_vars.include?(end_loc[0]) && end_loc[1].to_i == start_loc[1].to_i + 1 && opponent?(idx_start_loc, idx_end_loc)
+      true
+    elsif column_vars.include?(end_loc[0]) && end_loc[1].to_i == start_loc[1].to_i - 1 && opponent?(idx_start_loc, idx_end_loc)
       true
     else
       false

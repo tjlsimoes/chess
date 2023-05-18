@@ -1545,4 +1545,24 @@
 # Board#valid_move? sketched out it is
 # perhaps time to look into getting that
 # user input.
+# ✓ Done - for the effect at least.
 
+############### 17 May #####################
+
+# Identified problems in need of fix:
+# ✓ Pawn#possible_moves is incorrectly
+#   defined: pawns from the upper part of
+#   the chess board won't move to rows
+#   with increased number, but to rows
+#   of lesser values.
+# ✓ Pawn's special valid_move? conditions
+#   also suffer from the same problem.
+#   Current Pawn#possible_moves only works
+#   for pawns from the bottom part of the
+#   chess board.
+# ✓ At each player turn, every piece can
+#   be selected and moved, irregardless
+#   of its being a piece that belongs to
+#   the player playing or not.
+# - Errors due to invalid user input result
+#   in game crashing.
