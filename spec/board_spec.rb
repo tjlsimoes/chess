@@ -424,5 +424,58 @@ describe Board do
         expect(start_square).to be_nil
       end
     end
+
+    context "white king moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[37] = King.new("\u265A", "d5")
+        cells[45] = Pawn.new("\u2659", "d6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns piece with updated location" do
+        expected = board.cells[37]
+        expected.instance_variable_set(:@location,"d6")
+        board.update_board(['d5', 'd6'])
+        target_square = board.cells[45]
+
+        expect(target_square).to eq(expected)
+      end
+    end
+
+    context "black king moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[37] = King.new("\u2654", "d5")
+        cells[45] = Pawn.new("\u265F", "d6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "updates board @black_king_loc correctly" do
+        board.update_board(['d5', 'd6'])
+        black_king_loc = board.black_king_loc
+
+        expect(black_king_loc).to eq("d6")
+      end
+    end
+
+    context "white king moved to square occupied by opponent's piece" do
+
+      before do
+        cells = Array.new(65)
+        cells[37] = King.new("\u265A", "d5")
+        cells[45] = Pawn.new("\u2659", "d6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "updates board @white_king_loc correctly" do
+        board.update_board(['d5', 'd6'])
+        white_king_loc = board.white_king_loc
+
+        expect(white_king_loc).to eq("d6")
+      end
+    end
   end
 end

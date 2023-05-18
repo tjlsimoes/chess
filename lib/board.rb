@@ -309,6 +309,14 @@ class Board
     cells[idx].is_a?(Pawn) && cells[idx].unmoved == true
   end
 
+  def black_king?(idx)
+    cells[idx].is_a?(King) && cells[idx].colour == "black"
+  end
+
+  def white_king?(idx)
+    cells[idx].is_a?(King) && cells[idx].colour == "white"
+  end
+
   def update_board(user_input)
     end_loc = user_input[1]
 
@@ -320,5 +328,7 @@ class Board
     cells[idx_start_loc] = nil
 
     cells[idx_end_loc].unmoved = false if unmoved_pawn?(idx_end_loc)
+    @white_king_loc = end_loc if white_king?(idx_end_loc)
+    @black_king_loc = end_loc if black_king?(idx_end_loc)
   end
 end
