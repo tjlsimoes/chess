@@ -9,8 +9,8 @@ class Game
 
   def initialize
     @board = Board.new
-    @first_player = Player.new("Player 1")
-    @second_player = Player.new("Player 2")
+    @first_player = Player.new("Player 1", "white")
+    @second_player = Player.new("Player 2", "black")
     @current_player = first_player
   end
 
@@ -35,6 +35,16 @@ class Game
     separator && letters && numbers
   end
 
+  def player_piece_match?(user_input, player)
+    selected_piece = board.cells[board.notation_to_cell(user_input[0])]
+    player.pieces_colour == selected_piece.colour
+  end
+
+  def input_guard_clauses(user_input_orig, user_input, player)
+    valid_input?(user_input_orig) && board.valid_move?(user_input) &&
+      player_piece_match?(user_input, player)
+  end
+
   private
 
   def player_turns
@@ -49,9 +59,9 @@ class Game
     puts display_player_turn(player.name)
     user_input_orig = gets.chomp
     user_input = user_input_orig.split("-")
-    p valid_input?(user_input_orig)
-    p board.valid_move?(user_input)
-    return user_input if valid_input?(user_input_orig) && board.valid_move?(user_input)
+    # p valid_input?(user_input_orig)
+    # p board.valid_move?(user_input)
+    return user_input if input_guard_clauses(user_input_orig, user_input, current_player)
 
     puts display_input_warning
     turn_input(player)
