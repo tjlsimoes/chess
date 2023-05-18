@@ -12,9 +12,9 @@ class Board
   attr_accessor :white_king_loc, :black_king_loc
 
   def initialize
+    @white_king_loc = "e1"
+    @black_king_loc = "e8"
     @cells = initial_board
-    @white_king_loc = nil
-    @black_king_loc = nil
   end
 
   def show
@@ -67,7 +67,6 @@ class Board
 
     cells[61] = Queen.new("\u2655", "d8")
     cells[60] = King.new("\u2654", "e8")
-    @black_king_loc = "e8"
 
     for i in (49..56) do
 
@@ -94,7 +93,6 @@ class Board
     cells[3] = Bishop.new("\u265D", "f1")
     cells[6] = Bishop.new("\u265D", "c1")
 
-    @white_king_loc = "e1"
     cells[4] = King.new("\u265A", "e1")
     cells[5] = Queen.new("\u265B", "d1")
 
@@ -330,5 +328,21 @@ class Board
     cells[idx_end_loc].unmoved = false if unmoved_pawn?(idx_end_loc)
     @white_king_loc = end_loc if white_king?(idx_end_loc)
     @black_king_loc = end_loc if black_king?(idx_end_loc)
+  end
+
+  def check?(king_loc)
+    if cells[notation_to_cell(king_loc)].colour == "white"
+      cells.any? do |value|
+        if !value.nil?
+          value.colour != "white" && valid_move?([value.location, king_loc])
+        end
+      end
+    else 
+      cells.any? do |value|
+        if !value.nil?
+          value.colour != "black" && valid_move?([value.location, king_loc])
+        end
+      end
+    end
   end
 end

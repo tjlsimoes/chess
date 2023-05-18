@@ -34,6 +34,13 @@ describe Board do
         expect(output).to eq(8)
       end
     end
+
+    context "when given 'e8'" do
+      it "returns 60" do
+        output = board.notation_to_cell("e8")
+        expect(output).to eq(60)
+      end
+    end
   end
 
   describe "#intermediate_squares" do
@@ -475,6 +482,24 @@ describe Board do
         white_king_loc = board.white_king_loc
 
         expect(white_king_loc).to eq("d6")
+      end
+    end
+  end
+
+  describe "#check?" do
+    context "initially: no check on black king" do
+      it "returns false" do
+        output = board.check?(board.black_king_loc)
+
+        expect(output).to eq false
+      end
+    end
+
+    context "initially: no check on white king" do
+      it "returns false" do
+        output = board.check?(board.white_king_loc)
+
+        expect(output).to eq false
       end
     end
   end

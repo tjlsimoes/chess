@@ -1566,3 +1566,89 @@
 #   the player playing or not.
 # - Errors due to invalid user input result
 #   in game crashing.
+
+############### 18 May #####################
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Mate and chekmate evaluation.
+# - En passant, castling, exchange of pieces.
+
+# What is check?
+# When the king of a player can be taken by
+#  a piece of the opponent, one says that
+# the king is in check.
+
+# It is not allowed to make a move,
+#  such that ones king is in check after
+# the move.
+
+# There are three different possible ways
+# to remove a check:
+# 1. Move the king away to a square where
+#    he is not in check.
+# 2. Take the piece that gives the check.
+# 3. In case of a check, given by a rook,
+#     bishop or queen: move a piece between
+#     the checking piece and the king.
+
+# What is checkmate?
+# When a player is in check, and he cannot
+# make a move such that after the move,
+# the king is not in check, then he is mated.
+
+# The player that is mated lost the game,
+# and the player that mated him won the game.
+
+# Essentially:
+# Check seems to call for an evaluation
+# of the king's status. If it is in danger
+# of being taken by any of the opponent's
+# pieces.
+# Checkmate seems to call not only for a
+# check evaluation, but also for a check
+# evaluation to all the possible king
+# movements.
+
+# How could a check evaluation be most
+# efficiently done?
+
+# It could be achieved by:
+# - Checking if any of the kings' opponent
+#   pieces include its location in their
+#   respective possible moves method. Plus
+#   an evaluation of it being an actual
+#   valid move.
+
+# This seems to require, for each king:
+# - Evaluation of the king's colour and
+#   location (in notation terms).
+# - Collecting the values for all the
+#   opponent pieces #possible_moves
+#   values.
+# - Checking if they include the king's
+#   location.
+# - Checking if the piece with that
+#   "possible move" translates to an actual
+#   valid move.
+#    - This last point seems to require more
+#      than a mere collection of the
+#      #possible_moves output for each
+#      opponent piece on the board. A link
+#      between the piece and its
+#      #possible_moves has to be mantained.
+#      Perhaps an hash or an array with
+#      nested arrays would do the trick.
+#      Or perhaps a more complex evaluation
+#      of the opponent's chess pieces on the
+#      board would suffice. For instances,
+#      a search for an opponent's chess piece
+#      (disparate colour) that contains the
+#      king's location in its #possible_moves.
+
+# The addition of two board instance variables
+# with the two kings' respective locations
+# would save a scan on the board every play.
+
+# ✓ Sketch of Board#check?
