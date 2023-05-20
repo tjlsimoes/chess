@@ -32,4 +32,15 @@ describe King do
       end
     end
   end
+
+  describe "#possible_moves with results sorted" do
+    describe "at position e1" do
+      subject(:king) { King.new("\u265A", "e1")}
+
+      it "returns %w[d1 d2 e2 f1 f2]" do
+        output = king.possible_moves
+        expect(output.sort).to eq(%w[d1 d2 e2 f1 f2])
+      end
+    end
+  end
 end

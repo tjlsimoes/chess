@@ -20,22 +20,24 @@ class King
 
   def possible_moves
     columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
-    row_vars = [1, 0, -1]
 
     coordinates = location.split("")
     column_idx = columns.index(coordinates[0])
 
-    column_vars = [columns[column_idx - 1], coordinates[0], columns[column_idx + 1]]
+    column_vars = [coordinates[0], columns[column_idx + 1]]
+    column_vars << columns[column_idx - 1] if column_idx - 1 >= 0
 
     row = coordinates[1].to_i
     column = coordinates[0]
-    coordinates = [column, row]
 
+    row_vars = [0]
+    row_vars.push(-1) if row - 1 >= 1
+    row_vars.push(1) if row + 1 <= 8
 
     possible_moves = []
     for i in column_vars do
       for j in row_vars do
-        possible_moves << [i, coordinates[1] + j] unless i == coordinates[0] && j == 0 || i == nil
+        possible_moves << [i, row + j] unless i == column && j == 0 || i == nil
       end
     end
 
