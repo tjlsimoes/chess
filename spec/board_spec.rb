@@ -530,5 +530,33 @@ describe Board do
       end
     end
   end
+
+  describe "#checkmate?" do
+
+    context "initially: no checkmate on white king" do
+      it "returns false" do
+        output = board.checkmate?(board.white_king_loc)
+
+        expect(output).to eq false
+      end
+    end
+
+    context "checkmate on black king" do
+
+      before do
+        cells = Array.new(65)
+        cells[57] = King.new("\u2654", "h8")
+        cells[33] = Rook.new("\u265C", "h5")
+        cells[51] = Queen.new("\u265C", "f7")
+        board.instance_variable_set(:@black_king_loc, "h8")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.checkmate?(board.black_king_loc)
+
+        expect(output).to eq true
+      end
+  end
   end
 end

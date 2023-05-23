@@ -1652,3 +1652,16 @@
 # would save a scan on the board every play.
 
 # ✓ Sketch of Board#check?
+
+############### 20 May #####################
+
+# What ought Board#checkmate? to constitute?
+# Evaluation of:
+# - Check on king.
+# - Check on every of king's actually
+#   possible moves.
+
+############### 23 May #####################
+
+# ✓ Sketch of Board#checkmate? and, hence,
+#   of Board#game_over?

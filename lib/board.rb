@@ -300,7 +300,7 @@ class Board
   end
 
   def game_over?
-    false
+    checkmate?(white_king_loc) || checkmate?(black_king_loc)
   end
 
   def unmoved_pawn?(idx)
@@ -365,5 +365,12 @@ class Board
         end
       end
     end
+  end
+
+  def checkmate?(king_loc)
+    return false unless check?(king_loc)
+
+    colour = cells[notation_to_cell(king_loc)].colour
+    king_valid_moves(king_loc).all? {|move| check?(move, colour)}
   end
 end
