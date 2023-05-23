@@ -154,6 +154,21 @@ class Board
     start_loc_col > end_loc_col && start_loc_row > end_loc_row
   end
 
+  def same_row?(start_loc, end_loc)
+    start_loc[1] == end_loc[1]
+  end
+
+  def king_and_rook?(idx_start, idx_end)
+    cells[idx_start].is_a?(King) && cells[idx_end].is_a?(Rook) ||
+      cells[idx_end].is_a?(King) && cells[idx_start].is_a?(Rook)
+  end
+
+  def castling?(idx_start, idx_end, start_loc, end_loc)
+    king_and_rook?(idx_start, idx_end) &&
+      !opponent?(idx_start, idx_end) &&
+        same_row?(start_loc, end_loc)
+  end
+
   def intermediate_squares(user_input)
 
     start_loc = user_input[0]

@@ -43,6 +43,55 @@ describe Board do
     end
   end
 
+  describe "#castling?" do
+    context "taking indexes of king and rook of the same colour and same rows" do
+      it "returns true" do
+        output = board.castling?(60, 64, "e8", "a8")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "taking indexes of king and rook of same colour and disparate rows" do
+
+      before do
+        cells = Array.new(65)
+        cells[37] = King.new("\u265A", "d5")
+        cells[45] = Rook.new("\u265C", "d6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.castling?(37, 45, "d5", "d6")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "taking indexes of king and rook of different colour and same rows" do
+      before do
+        cells = Array.new(65)
+        cells[37] = King.new("\u265A", "d5")
+        cells[40] = Rook.new("\u2656", "a5")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.castling?(37, 40, "d5", "a5")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "taking indexes of king and bishop of the same colour and same rows" do
+      it "returns true" do
+        output = board.castling?(60, 62, "e8", "c8")
+
+        expect(output).to eq false
+      end
+    end
+  end
+
   describe "#intermediate_squares" do
 
     context "vertical upwards movement" do
