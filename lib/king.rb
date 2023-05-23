@@ -2,12 +2,13 @@
 
 class King
   attr_accessor :location
-  attr_reader :symbol, :colour
+  attr_reader :symbol, :colour, :unmoved
 
-  def initialize(symbol, location)
+  def initialize(symbol, location, unmoved = true)
     @symbol = symbol
     @location = location
     @colour = get_colour
+    @unmoved = unmoved
   end
 
   def get_colour
