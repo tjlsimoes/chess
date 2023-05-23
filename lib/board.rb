@@ -315,6 +315,11 @@ class Board
     cells[idx].is_a?(King) && cells[idx].colour == "white"
   end
 
+  def king_valid_moves(loc)
+    poss_moves = cells[notation_to_cell(loc)].possible_moves
+    valid_moves = poss_moves.select { |move| valid_move?([loc, move]) }
+  end
+
   def update_board(user_input)
     end_loc = user_input[1]
 

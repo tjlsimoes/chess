@@ -486,6 +486,16 @@ describe Board do
     end
   end
 
+  describe "#king_valid_moves" do
+    context "initial board called with white_king_loc" do
+      it "returns an empty array" do
+        output = board.king_valid_moves(board.white_king_loc)
+
+        expect(output).to eq([])
+      end
+    end
+  end
+
   describe "#check?" do
     context "initially: no check on black king" do
       it "returns false" do
