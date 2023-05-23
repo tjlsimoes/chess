@@ -335,8 +335,24 @@ class Board
     @black_king_loc = end_loc if black_king?(idx_end_loc)
   end
 
-  def check?(king_loc)
-    if cells[notation_to_cell(king_loc)].colour == "white"
+  # def check?(king_loc)
+  #   if cells[notation_to_cell(king_loc)].colour == "white"
+  #     cells.any? do |value|
+  #       if !value.nil?
+  #         value.colour != "white" && valid_move?([value.location, king_loc])
+  #       end
+  #     end
+  #   else 
+  #     cells.any? do |value|
+  #       if !value.nil?
+  #         value.colour != "black" && valid_move?([value.location, king_loc])
+  #       end
+  #     end
+  #   end
+  # end
+
+  def check?(king_loc, colour = cells[notation_to_cell(king_loc)].colour)
+    if colour == "white"
       cells.any? do |value|
         if !value.nil?
           value.colour != "white" && valid_move?([value.location, king_loc])

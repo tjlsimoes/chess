@@ -512,5 +512,23 @@ describe Board do
         expect(output).to eq false
       end
     end
+
+    context "check on black king" do
+
+      before do
+        cells = Array.new(65)
+        cells[45] = King.new("\u2654", "d6")
+        cells[36] = Pawn.new("\u265F", "e5")
+        board.instance_variable_set(:@black_king_loc, "d6")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.check?(board.black_king_loc)
+
+        expect(output).to eq true
+      end
+    end
+  end
   end
 end
