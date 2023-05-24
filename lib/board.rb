@@ -159,8 +159,7 @@ class Board
   end
 
   def king_and_rook?(idx_start, idx_end)
-    cells[idx_start].is_a?(King) && cells[idx_end].is_a?(Rook) ||
-      cells[idx_end].is_a?(King) && cells[idx_start].is_a?(Rook)
+    cells[idx_start].is_a?(King) && cells[idx_end].is_a?(Rook)
   end
 
   def castling?(idx_start, idx_end, start_loc, end_loc)
