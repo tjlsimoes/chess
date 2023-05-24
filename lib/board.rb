@@ -368,16 +368,39 @@ class Board
   end
 
   def update_board(user_input)
+    start_loc = user_input[0]
     end_loc = user_input[1]
 
     idx_start_loc = notation_to_cell(user_input[0])
     idx_end_loc = notation_to_cell(user_input[1])
 
-    cells[idx_start_loc].location = end_loc
-    cells[idx_end_loc] = cells[idx_start_loc]
-    cells[idx_start_loc] = nil
+    if castling?(idx_start_loc, idx_end_loc, start_loc, end_loc)
 
-    cells[idx_end_loc].unmoved = false if unmoved_pawn?(idx_end_loc)
+      locs_end = castling_end_locations(start_loc, end_loc)
+      locs_end_idx = locs_end.map { |notation| notation_to_cell(notation) }
+
+      cells[idx_start_loc].location = locs_end[0]
+      cells[idx_start_loc].unmoved = false
+      cells[locs_end_idx[0]] = cells[idx_start_loc]
+
+      cells[idx_end_loc].location = locs_end[1]
+      cells[idx_end_loc].unmoved = false
+      cells[locs_end_idx[1]] = cells[idx_end_loc]
+
+      cells[idx_start_loc] = nil
+      cells[idx_end_loc] = nil
+
+      # For posterior king locations' instance variables redefinitions.
+      idx_end_loc = locs_end_idx[0]
+      end_loc = locs_end[0]
+    else
+      cells[idx_start_loc].location = end_loc
+      cells[idx_end_loc] = cells[idx_start_loc]
+      cells[idx_start_loc] = nil
+
+      cells[idx_end_loc].unmoved = false if unmoved_pawn?(idx_end_loc)
+    end
+
     @white_king_loc = end_loc if white_king?(idx_end_loc)
     @black_king_loc = end_loc if black_king?(idx_end_loc)
   end
@@ -389,7 +412,7 @@ class Board
   #         value.colour != "white" && valid_move?([value.location, king_loc])
   #       end
   #     end
-  #   else 
+  #   else
   #     cells.any? do |value|
   #       if !value.nil?
   #         value.colour != "black" && valid_move?([value.location, king_loc])

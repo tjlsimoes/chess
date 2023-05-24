@@ -583,6 +583,96 @@ describe Board do
         expect(white_king_loc).to eq("d6")
       end
     end
+
+    context "castling move" do
+      before do
+        cells = Array.new(65)
+        cells[64] = Rook.new("\u2656", "a8")
+        cells[60] = King.new("\u2654", "e8")
+        board.instance_variable_set(:@cells, cells)
+        # board.show
+      end
+
+      it "returns king with correctly updated location" do
+        expected = board.cells[60]
+        expected.instance_variable_set(:@location,"a8")
+        board.update_board(['e8', 'a8'])
+        target_square = board.cells[62]
+
+        # board.show
+
+        expect(target_square).to eq(expected)
+      end
+    end
+
+    context "castling move" do
+      before do
+        cells = Array.new(65)
+        cells[64] = Rook.new("\u2656", "a8")
+        cells[60] = King.new("\u2654", "e8")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns rook with correctly updated location" do
+        expected = board.cells[64]
+        expected.instance_variable_set(:@location,"d8")
+        board.update_board(['e8', 'a8'])
+        target_square = board.cells[61]
+
+        expect(target_square).to eq(expected)
+      end
+    end
+
+    context "castling move" do
+      before do
+        cells = Array.new(65)
+        cells[64] = Rook.new("\u2656", "a8")
+        cells[60] = King.new("\u2654", "e8")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "updates king and rook's @unmoved to false" do
+        board.update_board(['e8', 'a8'])
+        king_unmoved = board.cells[62].unmoved
+        rook_unmoved = board.cells[61].unmoved
+        output = [king_unmoved, rook_unmoved]
+        output = output.all? { |value| value == false }
+
+        expect(output).to eq(true)
+      end
+    end
+
+    context "castling move" do
+      before do
+        cells = Array.new(65)
+        cells[64] = Rook.new("\u2656", "a8")
+        cells[60] = King.new("\u2654", "e8")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "updates previously occupied squares to nil" do
+        board.update_board(['e8', 'a8'])
+        previous = [board.cells[60], board.cells[64]]
+
+        expect(previous.compact).to eq([])
+      end
+    end
+
+    context "castling move with black king" do
+      before do
+        cells = Array.new(65)
+        cells[64] = Rook.new("\u2656", "a8")
+        cells[60] = King.new("\u2654", "e8")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "updates board @black_king_loc correctly" do
+        board.update_board(['e8', 'a8'])
+        black_king_loc = board.black_king_loc
+
+        expect(black_king_loc).to eq("c8")
+      end
+    end
   end
 
   describe "#king_valid_moves" do
