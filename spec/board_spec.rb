@@ -168,6 +168,31 @@ describe Board do
     end
   end
 
+  describe "#castling_valid_move?" do
+    context "with intermediate steps occupied" do
+      it "returns false" do
+        output = board.castling_valid_move?("e8", "a8", 60, 64)
+
+        expect(output).to eq false
+      end
+    end
+
+    context "valid castling move" do
+      before do
+        cells = Array.new(65)
+        cells[64] = Rook.new("\u2656", "a8")
+        cells[60] = King.new("\u2654", "e8")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.castling_valid_move?("e8", "a8", 60, 64)
+
+        expect(output).to eq true
+      end
+    end
+  end
+
   describe "#valid_move?" do
 
     context "initial pawn moved two squares" do

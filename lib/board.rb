@@ -134,6 +134,10 @@ class Board
     end
   end
 
+  def unmoved?(idx)
+    cells[idx].unmoved == true
+  end
+
   def rook_queen_bishop?(idx)
     cells[idx].kind_of?(Rook) || cells[idx].kind_of?(Queen) || cells[idx].kind_of?(Bishop)
   end
@@ -309,6 +313,18 @@ class Board
     else
       false
     end
+  end
+
+  def castling_valid_move?(start_loc, end_loc, idx_start_loc, idx_end_loc)
+    locs_end = castling_end_locations(start_loc, end_loc)
+    king_end_loc = locs_end[0]
+
+    king_colour = cells[idx_start_loc].colour
+
+    unmoved?(idx_start_loc) && unmoved?(idx_end_loc) &&
+      intermediate_squares([start_loc, end_loc]).all? { |coordinates| cells[notation_to_cell(coordinates)] == nil } &&
+        intermediate_squares([start_loc, king_end_loc]).all? { |coordinates| !check?(coordinates, king_colour) } &&
+          !check?(start_loc, king_colour) && !check?(king_end_loc, king_colour)
   end
 
   def valid_move?(user_input)
