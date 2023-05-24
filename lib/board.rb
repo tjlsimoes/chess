@@ -166,9 +166,9 @@ class Board
     cells[idx_start].is_a?(King) && cells[idx_end].is_a?(Rook)
   end
 
-  def castling?(idx_start, idx_end, start_loc, end_loc)
-    king_and_rook?(idx_start, idx_end) &&
-      !opponent?(idx_start, idx_end) &&
+  def castling?(idx_start_loc, idx_end_loc, start_loc, end_loc)
+    king_and_rook?(idx_start_loc, idx_end_loc) &&
+      !opponent?(idx_start_loc, idx_end_loc) &&
         same_row?(start_loc, end_loc)
   end
 
