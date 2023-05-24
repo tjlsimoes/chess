@@ -411,6 +411,21 @@ describe Board do
         expect(output).to eq(true)
       end
     end
+
+    context "valid castling move" do
+      before do
+        cells = Array.new(65)
+        cells[64] = Rook.new("\u2656", "a8")
+        cells[60] = King.new("\u2654", "e8")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.valid_move?(["e8", "a8"])
+
+        expect(output).to eq true
+      end
+    end
   end
 
   describe "#update_board" do

@@ -339,6 +339,8 @@ class Board
         intermediate_squares(user_input).all? { |square| cells[notation_to_cell(square)] == nil}
     elsif cells[idx_start_loc].is_a?(Pawn)
       pawn_valid_move?(start_loc, end_loc, idx_start_loc, idx_end_loc, user_input)
+    elsif castling?(idx_start_loc, idx_end_loc, start_loc, end_loc)
+      castling_valid_move?(start_loc, end_loc, idx_start_loc, idx_end_loc)
     else
       cells[idx_start_loc].possible_moves.include?(end_loc) && nil_or_opponent?(idx_start_loc, idx_end_loc)
     end
