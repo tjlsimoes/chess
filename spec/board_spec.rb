@@ -92,6 +92,16 @@ describe Board do
     end
   end
 
+  describe "#castling_end_locations" do
+    context "king at e8 and rook at a8" do
+      it "returns %w[c8 d8]" do
+        output = board.castling_end_locations("e8", "a8")
+
+        expect(output).to eq(%w[c8 d8])
+      end
+    end
+  end
+
   describe "#intermediate_squares" do
 
     context "vertical upwards movement" do

@@ -168,6 +168,21 @@ class Board
         same_row?(start_loc, end_loc)
   end
 
+  def castling_end_locations(start_loc, end_loc)
+    columns = %w[a b c d e f g h]
+    start_loc_col_idx = columns.index(start_loc[0])
+
+    if start_loc[0] > end_loc[0]
+      king_end_loc = [columns[start_loc_col_idx - 2], start_loc[1]].join
+      rook_end_loc = [columns[start_loc_col_idx - 1], start_loc[1]].join
+    else
+      king_end_loc = [columns[start_loc_col_idx + 2], start_loc[1]].join
+      rook_end_loc = [columns[start_loc_col_idx + 1], start_loc[1]].join
+    end
+
+    [king_end_loc, rook_end_loc]
+  end
+
   def intermediate_squares(user_input)
 
     start_loc = user_input[0]
