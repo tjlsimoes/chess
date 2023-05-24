@@ -1,8 +1,8 @@
 # Rook/Tower class
 
 class Rook
-  attr_accessor :location
-  attr_reader :symbol, :colour, :unmoved
+  attr_accessor :location, :unmoved
+  attr_reader :symbol, :colour
 
   def initialize(symbol, location, unmoved = true)
     @symbol = symbol
