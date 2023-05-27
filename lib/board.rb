@@ -8,12 +8,14 @@ require_relative "pawn.rb"
 # Chess board
 
 class Board
-  attr_accessor :white_king_loc, :black_king_loc, :cells
+  attr_accessor :white_king_loc, :black_king_loc,
+                :cells, :en_passant
 
   def initialize
     @white_king_loc = "e1"
     @black_king_loc = "e8"
     @cells = initial_board
+    @en_passant = nil
   end
 
   def show
