@@ -102,6 +102,340 @@ describe Board do
     end
   end
 
+  describe "#unmoved_pawn_twosq?" do
+    context "unmoved pawn two square forward movement" do
+      it "returns true" do
+        output = board.unmoved_pawn_twosq?(16, "a2", "a4")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "unmoved pawn one square forward movement" do
+      it "returns false" do
+        output = board.unmoved_pawn_twosq?(16, "a2", "a3")
+
+        expect(output).to eq false
+      end
+    end
+  end
+
+  describe "#aside" do
+    context "taking \"d5\" as input" do
+      it "outputs \"e5\"" do
+        output = board.aside("d5")
+
+        expect(output).to eq("e5")
+      end
+    end
+
+    context "taking \"h5\" as input" do
+      it "outputs nil" do
+        output = board.aside("h5")
+
+        expect(output).to be_nil
+      end
+    end
+  end
+
+  describe "#aside_opponent_pawn?" do
+    context "initial board and unmoved pawn two squares forward movement" do
+      it "returns false" do
+        output = board.aside_opponent_pawn?(16, "a4")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "white unmoved pawn two squares forward movement next to opponent on the right" do
+      before do
+        cells = Array.new(65)
+        cells[16] = Pawn.new("\u265F", "a2")
+        cells[31] = Pawn.new("\u2659", "b4")
+        board.instance_variable_set(:@cells, cells)
+      end
+      it "returns true" do
+        output = board.aside_opponent_pawn?(16, "a4")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "black unmoved pawn two squares forward movement next to opponent on the right" do
+      before do
+        cells = Array.new(65)
+        cells[48] = Pawn.new("\u2659", "a6")
+        cells[31] = Pawn.new("\u265F", "b4")
+        board.instance_variable_set(:@cells, cells)
+      end
+      it "returns true" do
+        output = board.aside_opponent_pawn?(48, "a4")
+
+        expect(output).to eq true
+      end
+    end
+  end
+
+  describe "#bside" do
+    context "taking \"d5\" as input" do
+      it "outputs \"c5\"" do
+        output = board.bside("d5")
+
+        expect(output).to eq("c5")
+      end
+    end
+
+    context "taking \"a5\" as input" do
+      it "outputs nil" do
+        output = board.bside("a5")
+
+        expect(output).to be_nil
+      end
+    end
+  end
+
+  describe "#bside_opponent_pawn?" do
+    context "initial board and unmoved pawn two squares forward movement" do
+      it "returns false" do
+        output = board.bside_opponent_pawn?(13, "d2")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "white unmoved pawn two squares forward movement next to opponent on the left" do
+      before do
+        cells = Array.new(65)
+        cells[13] = Pawn.new("\u265F", "d2")
+        cells[30] = Pawn.new("\u2659", "c4")
+        board.instance_variable_set(:@cells, cells)
+      end
+      it "returns true" do
+        output = board.bside_opponent_pawn?(13, "d4")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "black unmoved pawn two squares forward movement next to opponent on the left" do
+      before do
+        cells = Array.new(65)
+        cells[45] = Pawn.new("\u2659", "d6")
+        cells[30] = Pawn.new("\u265F", "c4")
+        board.instance_variable_set(:@cells, cells)
+      end
+      it "returns true" do
+        output = board.bside_opponent_pawn?(45, "d4")
+
+        expect(output).to eq true
+      end
+    end
+  end
+
+  describe "#absides_opponent_pawns?" do
+    context "initial board and unmoved pawn two squares forward movement" do
+      it "returns false" do
+        output = board.absides_opponent_pawns?(13, "d2")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "white unmoved pawn two squares forward movement next to opponent on the left" do
+      before do
+        cells = Array.new(65)
+        cells[13] = Pawn.new("\u265F", "d2")
+        cells[30] = Pawn.new("\u2659", "c4")
+        board.instance_variable_set(:@cells, cells)
+      end
+      it "returns false" do
+        output = board.absides_opponent_pawns?(13, "d4")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "white unmoved pawn two squares forward movement next to opponent on the left and on the right" do
+      before do
+        cells = Array.new(65)
+        cells[13] = Pawn.new("\u265F", "d2")
+        cells[30] = Pawn.new("\u2659", "c4")
+        cells[28] = Pawn.new("\u2659", "e4")
+        board.instance_variable_set(:@cells, cells)
+      end
+      it "returns true" do
+        output = board.absides_opponent_pawns?(13, "d4")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "white unmoved pawn two squares forward movement on column h landing next to opponent on the left" do
+      before do
+        cells = Array.new(65)
+        cells[9] = Pawn.new("\u265F", "h2")
+        cells[26] = Pawn.new("\u2659", "g4")
+        board.instance_variable_set(:@cells, cells)
+      end
+      it "returns false" do
+        output = board.absides_opponent_pawns?(9, "h4")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "white unmoved pawn two squares forward movement on column a landing next to opponent on the right" do
+      before do
+        cells = Array.new(65)
+        cells[16] = Pawn.new("\u265F", "a2")
+        cells[47] = Pawn.new("\u2659", "b4")
+        board.instance_variable_set(:@cells, cells)
+      end
+      it "returns false" do
+        output = board.absides_opponent_pawns?(16, "a4")
+
+        expect(output).to eq false
+      end
+    end
+  end
+
+  describe "#bside_vd_en_passant" do
+    context "black pawn two square movement from \"e7\" to \"e5\"" do
+      it "returns %w[d5 e6]" do
+        output = board.bside_vd_en_passant("e7", "e5", 7)
+
+        expect(output).to eq(%w[d5 e6])
+      end
+    end
+  end
+
+  describe "#aside_vd_en_passant" do
+    context "black pawn two square movement from \"e7\" to \"e5\"" do
+      it "returns %w[f5 e6]" do
+        output = board.aside_vd_en_passant("e7", "e5", 7)
+
+        expect(output).to eq(%w[f5 e6])
+      end
+    end
+  end
+
+  describe "#bside_vu_en_passant" do
+    context "black pawn two square movement from \"d2\" to \"d4\"" do
+      it "returns %w[c4 d3]" do
+        output = board.bside_vu_en_passant("d2", "d4", 2)
+
+        expect(output).to eq(%w[c4 d3])
+      end
+    end
+  end
+
+  describe "#aside_vu_en_passant" do
+    context "black pawn two square movement from \"d2\" to \"d4\"" do
+      it "returns %w[e4 d3]" do
+        output = board.aside_vu_en_passant("d2", "d4", 2)
+
+        expect(output).to eq(%w[e4 d3])
+      end
+    end
+  end
+
+  describe "#vd_en_passant" do
+    context "absides_opponent_pawns? == true" do
+
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u2659", "d7")
+        cells[38] = Pawn.new("\u265F", "c5")
+        cells[36] = Pawn.new("\u265F", "e5")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns [%w[e5 d6],%w[c5 d6]]" do
+        output = board.vd_en_passant("d7", "d5", 7, 53)
+
+        expect(output).to eq([%w[e5 d6], %w[c5 d6]])
+      end
+    end
+
+    context "bside_opponent_pawn? == true" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u2659", "d7")
+        cells[38] = Pawn.new("\u265F", "c5")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns %w[c5 d6]" do
+        output = board.vd_en_passant("d7", "d5", 7, 53)
+
+        expect(output).to eq(%w[c5 d6])
+      end
+    end
+
+    context "aside_opponent_pawn? == true" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u2659", "d7")
+        cells[36] = Pawn.new("\u265F", "e5")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns %w[e5 d6]" do
+        output = board.vd_en_passant("d7", "d5", 7, 53)
+
+        expect(output).to eq(%w[e5 d6])
+      end
+    end
+  end
+
+  describe "#vu_en_passant" do
+    context "absides_opponent_pawns? == true" do
+      before do
+        cells = Array.new(65)
+        cells[13] = Pawn.new("\u265F", "d2")
+        cells[30] = Pawn.new("\u2659", "c4")
+        cells[28] = Pawn.new("\u2659", "e4")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns [%w[e4 d3], %w[c4 d3]]" do
+        output = board.vu_en_passant("d2", "d4", 2, 13)
+
+        expect(output).to eq([%w[e4 d3], %w[c4 d3]])
+      end
+    end
+
+    context "bside_opponent_pawn? == true" do
+      before do
+        cells = Array.new(65)
+        cells[13] = Pawn.new("\u265F", "d2")
+        cells[30] = Pawn.new("\u2659", "c4")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns %w[c4 d3]" do
+        output = board.vu_en_passant("d2", "d4", 2, 13)
+
+        expect(output).to eq(%w[c4 d3])
+      end
+    end
+
+    context "aside_opponent_pawn? == true" do
+      before do
+        cells = Array.new(65)
+        cells[16] = Pawn.new("\u265F", "a2")
+        cells[31] = Pawn.new("\u2659", "b4")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns %w[c4 d3]" do
+        output = board.vu_en_passant("a2", "a4", 2, 16)
+
+        expect(output).to eq(%w[b4 a3])
+      end
+    end
+  end
+
   describe "#intermediate_squares" do
 
     context "vertical upwards movement" do

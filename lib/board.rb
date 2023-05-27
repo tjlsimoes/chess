@@ -186,6 +186,130 @@ class Board
     [king_end_loc, rook_end_loc]
   end
 
+  def unmoved_pawn_twosq?(idx_start_loc, start_loc, end_loc)
+    # Assuming #update_board will only be called on valid
+    # two square pawn movements.
+    columns = %w[a b c d e f g h]
+
+    row_start = start_loc[1].to_i
+    row_end = end_loc[1].to_i
+
+    row_diff = (row_start - row_end).abs
+
+    cells[idx_start_loc].is_a?(Pawn) && row_diff == 2
+  end
+
+  def aside(end_loc)
+    columns = %w[a b c d e f g h]
+
+    end_column_idx = columns.index(end_loc[0])
+    column_var = [columns[end_column_idx + 1]] if end_column_idx + 1 < 8
+
+    return nil if column_var.nil?
+
+    aside = [column_var, end_loc[1]].join
+  end
+
+  def aside_opponent_pawn?(idx_start_loc, end_loc)
+    moved_pawn_colour = cells[idx_start_loc].colour
+
+    return false if aside(end_loc).nil?
+
+    idx_aside = notation_to_cell(aside(end_loc))
+
+    cells[idx_aside].is_a?(Pawn) &&
+      cells[idx_aside].colour != moved_pawn_colour
+  end
+
+  def bside(end_loc)
+    columns = %w[a b c d e f g h]
+
+    end_column_idx = columns.index(end_loc[0])
+    column_var = columns[end_column_idx - 1] if end_column_idx - 1 > 0
+
+    return nil if column_var.nil?
+
+    bside = [column_var, end_loc[1]].join
+  end
+
+  def bside_opponent_pawn?(idx_start_loc, end_loc)
+    moved_pawn_colour = cells[idx_start_loc].colour
+
+    return false if bside(end_loc).nil?
+
+    idx_bside = notation_to_cell(bside(end_loc))
+
+    cells[idx_bside].is_a?(Pawn) &&
+      cells[idx_bside].colour != moved_pawn_colour
+  end
+
+  def absides_opponent_pawns?(idx_start_loc, end_loc)
+    aside_opponent_pawn?(idx_start_loc, end_loc) &&
+      bside_opponent_pawn?(idx_start_loc, end_loc)
+  end
+
+  # Upwards and downwards relative to pawn that
+  # makes a two square movement and is to be
+  # possibly taken on the next move.
+
+  # For example. Vertical downwards is being
+  # thought as a movement of a black pawn from
+  # "e7" to "e5" that opens a possibily, for
+  # example, of a white pawn located at "f5"
+  # to take that black pawn, making a move
+  # "f5" to "e6".
+
+  def bside_vd_en_passant(start_loc, end_loc, start_loc_row) # Vertical downwards
+    en_pass_end_row = start_loc_row - 1
+    en_pass_end_loc = [start_loc[0], en_pass_end_row].join
+
+    [bside(end_loc), en_pass_end_loc]
+  end
+
+  def aside_vd_en_passant(start_loc, end_loc, start_loc_row) # Vertical downwards
+    en_pass_end_row = start_loc_row - 1
+    en_pass_end_loc = [start_loc[0], en_pass_end_row].join
+
+    [aside(end_loc), en_pass_end_loc]
+  end
+
+  def bside_vu_en_passant(start_loc, end_loc, start_loc_row) # Vertical upwards
+    en_pass_end_row = start_loc_row + 1
+    en_pass_end_loc = [start_loc[0], en_pass_end_row].join
+
+    [bside(end_loc), en_pass_end_loc]
+  end
+
+  def aside_vu_en_passant(start_loc, end_loc, start_loc_row) # Vertical upwards
+    en_pass_end_row = start_loc_row + 1
+    en_pass_end_loc = [start_loc[0], en_pass_end_row].join
+
+    [aside(end_loc), en_pass_end_loc]
+  end
+
+  def vd_en_passant(start_loc, end_loc, start_loc_row, idx_start_loc)
+    if absides_opponent_pawns?(idx_start_loc, end_loc)
+      possible_en_passant = []
+      possible_en_passant << aside_vd_en_passant(start_loc, end_loc, start_loc_row)
+      possible_en_passant << bside_vd_en_passant(start_loc, end_loc, start_loc_row)
+    elsif bside_opponent_pawn?(idx_start_loc, end_loc)
+      bside_vd_en_passant(start_loc, end_loc, start_loc_row)
+    elsif aside_opponent_pawn?(idx_start_loc, end_loc)
+      aside_vd_en_passant(start_loc, end_loc, start_loc_row)
+    end
+  end
+
+  def vu_en_passant(start_loc, end_loc, start_loc_row, idx_start_loc)
+    if absides_opponent_pawns?(idx_start_loc, end_loc)
+      possible_en_passant = []
+      possible_en_passant << aside_vu_en_passant(start_loc, end_loc, start_loc_row)
+      possible_en_passant << bside_vu_en_passant(start_loc, end_loc, start_loc_row)
+    elsif bside_opponent_pawn?(idx_start_loc, end_loc)
+      bside_vu_en_passant(start_loc, end_loc, start_loc_row)
+    elsif aside_opponent_pawn?(idx_start_loc, end_loc)
+      aside_vu_en_passant(start_loc, end_loc, start_loc_row)
+    end
+  end
   def intermediate_squares(user_input)
 
     start_loc = user_input[0]
