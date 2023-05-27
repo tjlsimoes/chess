@@ -143,6 +143,10 @@ class Board
     cells[idx].kind_of?(Rook) || cells[idx].kind_of?(Queen) || cells[idx].kind_of?(Bishop)
   end
 
+  def take_en_passant?(user_input)
+    en_passant.include?(user_input) || en_passant == user_input
+  end
+
   def diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
     end_loc_col > start_loc_col && end_loc_row > start_loc_row
   end
