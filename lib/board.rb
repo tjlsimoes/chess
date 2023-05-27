@@ -15,7 +15,7 @@ class Board
     @white_king_loc = "e1"
     @black_king_loc = "e8"
     @cells = initial_board
-    @en_passant = nil
+    @en_passant = []
   end
 
   def show
