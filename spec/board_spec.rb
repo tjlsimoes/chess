@@ -102,6 +102,16 @@ describe Board do
     end
   end
 
+  describe "#take_en_passant?" do
+    context "with initialized board and pawn move from b2-b4" do
+      it "returns false" do
+        output = board.take_en_passant?(%w[b2 b4])
+
+        expect(output).to eq(false)
+      end
+    end
+  end
+
   describe "#unmoved_pawn_twosq?" do
     context "unmoved pawn two square forward movement" do
       it "returns true" do
@@ -691,7 +701,7 @@ describe Board do
     context "move contemplated in @en_passant" do
       before do
         cells = Array.new(65)
-        cells[48] = Pawn.new("\u265F", "a4")
+        cells[32] = Pawn.new("\u265F", "a4")
         cells[31] = Pawn.new("\u2659", "b4")
         board.instance_variable_set(:@cells, cells)
 
@@ -1072,6 +1082,62 @@ describe Board do
         black_king_loc = board.black_king_loc
 
         expect(black_king_loc).to eq("c8")
+      end
+    end
+
+    context "take en_passant" do
+      before do
+        cells = Array.new(65)
+        cells[32] = Pawn.new("\u265F", "a4")
+        cells[31] = Pawn.new("\u2659", "b4")
+        board.instance_variable_set(:@cells, cells)
+
+        en_passant = %w[b4 a3]
+        board.instance_variable_set(:@en_passant, en_passant)
+      end
+      it "returns pawn with updated location" do
+        expected = board.cells[31]
+        expected.instance_variable_set(:@location,"a3")
+        board.update_board(%w[b4 a3])
+        target_square = board.cells[24]
+
+        expect(target_square).to eq(expected)
+      end
+    end
+
+    context "take en_passant" do
+      before do
+        cells = Array.new(65)
+        cells[32] = Pawn.new("\u265F", "a4")
+        cells[31] = Pawn.new("\u2659", "b4")
+        board.instance_variable_set(:@cells, cells)
+
+        en_passant = %w[b4 a3]
+        board.instance_variable_set(:@en_passant, en_passant)
+      end
+      it "previously occupied cell by moved pawn is updated to nil" do
+        board.update_board(%w[b4 a3])
+        target_square = board.cells[31]
+
+        expect(target_square).to be_nil
+      end
+    end
+
+    context "take en_passant" do
+      before do
+        cells = Array.new(65)
+        cells[32] = Pawn.new("\u265F", "a4")
+        cells[31] = Pawn.new("\u2659", "b4")
+        board.instance_variable_set(:@cells, cells)
+
+        en_passant = %w[b4 a3]
+        board.instance_variable_set(:@en_passant, en_passant)
+      end
+      it "other pawn cell is updated to nil" do
+        board.update_board(%w[b4 a3])
+        target_square = board.cells[48]
+
+        expect(target_square).to be_nil
       end
     end
   end

@@ -25,7 +25,6 @@ class Board
       else
         value.symbol
       end
-
     end
     puts <<-HEREDOC
       -----------------------------------------
@@ -143,10 +142,6 @@ class Board
     cells[idx].kind_of?(Rook) || cells[idx].kind_of?(Queen) || cells[idx].kind_of?(Bishop)
   end
 
-  def take_en_passant?(user_input)
-    en_passant.include?(user_input) || en_passant == user_input
-  end
-
   def diag_right_up?(start_loc_col, end_loc_col, start_loc_row, end_loc_row)
     end_loc_col > start_loc_col && end_loc_row > start_loc_row
   end
@@ -190,6 +185,10 @@ class Board
     end
 
     [king_end_loc, rook_end_loc]
+  end
+
+  def take_en_passant?(user_input)
+    @en_passant.include?(user_input) || @en_passant == user_input
   end
 
   def unmoved_pawn_twosq?(idx_start_loc, start_loc, end_loc)
@@ -533,6 +532,19 @@ class Board
     cells[idx_end_loc].unmoved = false if unmoved_pawn?(idx_end_loc)
   end
 
+  def en_passant_board_update(idx_start_loc, idx_end_loc, start_loc, end_loc)
+    default_board_update(idx_start_loc, idx_end_loc, end_loc)
+
+    if start_loc[1].to_i > end_loc[1].to_i # Vertical downwards
+      other_pawn_loc = [end_loc[0], end_loc[1].to_i + 1].join
+    else
+      other_pawn_loc = [end_loc[0], end_loc[1].to_i - 1].join
+    end
+
+    other_pawn_idx = notation_to_cell(other_pawn_loc)
+    cells[other_pawn_idx] = nil
+  end
+
   def kings_loc_update(idx_end_loc, end_loc)
     @white_king_loc = end_loc if white_king?(idx_end_loc)
     @black_king_loc = end_loc if black_king?(idx_end_loc)
@@ -545,9 +557,11 @@ class Board
     idx_start_loc = notation_to_cell(user_input[0])
     idx_end_loc = notation_to_cell(user_input[1])
 
-    if castling?(idx_start_loc, idx_end_loc, start_loc, end_loc)
+    if take_en_passant?(user_input)
+      en_passant_board_update(idx_start_loc, idx_end_loc, start_loc, end_loc)
       @en_passant = []
-
+    elsif castling?(idx_start_loc, idx_end_loc, start_loc, end_loc)
+      @en_passant = []
       locs_end = castling_end_locations(start_loc, end_loc)
       locs_end_idx = locs_end.map { |notation| notation_to_cell(notation) }
 
@@ -558,7 +572,11 @@ class Board
       end_loc = locs_end[0]
 
     elsif unmoved_pawn_twosq?(idx_start_loc, start_loc, end_loc)
-      @en_passant = possible_en_passant(start_loc, end_loc, idx_start_loc)
+      if !possible_en_passant(start_loc, end_loc, idx_start_loc).nil?
+        @en_passant = possible_en_passant(start_loc, end_loc, idx_start_loc)
+      else
+        @en_passant = []
+      end
       default_board_update(idx_start_loc, idx_end_loc, end_loc)
     else
       @en_passant = []
@@ -567,22 +585,6 @@ class Board
 
     kings_loc_update(idx_end_loc, end_loc)
   end
-
-  # def check?(king_loc)
-  #   if cells[notation_to_cell(king_loc)].colour == "white"
-  #     cells.any? do |value|
-  #       if !value.nil?
-  #         value.colour != "white" && valid_move?([value.location, king_loc])
-  #       end
-  #     end
-  #   else
-  #     cells.any? do |value|
-  #       if !value.nil?
-  #         value.colour != "black" && valid_move?([value.location, king_loc])
-  #       end
-  #     end
-  #   end
-  # end
 
   def check?(king_loc, colour = cells[notation_to_cell(king_loc)].colour)
     if colour == "white"
@@ -604,6 +606,6 @@ class Board
     return false unless check?(king_loc)
 
     colour = cells[notation_to_cell(king_loc)].colour
-    king_valid_moves(king_loc).all? {|move| check?(move, colour)}
+    king_valid_moves(king_loc).all? { |move| check?(move, colour) }
   end
 end
