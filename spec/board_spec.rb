@@ -809,6 +809,23 @@ describe Board do
       end
     end
 
+    context "initial pawn moved two squares enabling a possible opponent's take en-passant" do
+
+      before do
+        cells = Array.new(65)
+        cells[16] = Pawn.new("\u265F", "a2")
+        cells[31] = Pawn.new("\u2659", "b4")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns @en_passant correctly updated" do
+        board.update_board(['a2', 'a4'])
+        en_passant = board.en_passant
+
+        expect(en_passant).to eq(%w[b4 a3])
+      end
+    end
+
     context "initial pawn moved two squares" do
       it "@unmoved updated to false" do
         board.update_board(['a2', 'a4'])

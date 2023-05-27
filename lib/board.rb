@@ -505,6 +505,8 @@ class Board
   end
 
   def castling_board_update(idx_start_loc, idx_end_loc, locs_end, locs_end_idx)
+    @en_passant = []
+
     cells[idx_start_loc].location = locs_end[0]
     cells[idx_start_loc].unmoved = false
     cells[locs_end_idx[0]] = cells[idx_start_loc]
@@ -538,6 +540,7 @@ class Board
     idx_end_loc = notation_to_cell(user_input[1])
 
     if castling?(idx_start_loc, idx_end_loc, start_loc, end_loc)
+      @en_passant = []
 
       locs_end = castling_end_locations(start_loc, end_loc)
       locs_end_idx = locs_end.map { |notation| notation_to_cell(notation) }
@@ -547,7 +550,12 @@ class Board
       # For posterior king locations' instance variables redefinitions.
       idx_end_loc = locs_end_idx[0]
       end_loc = locs_end[0]
+
+    elsif unmoved_pawn_twosq?(idx_start_loc, start_loc, end_loc)
+      @en_passant = possible_en_passant(start_loc, end_loc, idx_start_loc)
+      default_board_update(idx_start_loc, idx_end_loc, end_loc)
     else
+      @en_passant = []
       default_board_update(idx_start_loc, idx_end_loc, end_loc)
     end
 
