@@ -502,6 +502,32 @@ class Board
     valid_moves = poss_moves.select { |move| valid_move?([loc, move]) }
   end
 
+  def castling_board_update(idx_start_loc, idx_end_loc, locs_end, locs_end_idx)
+    cells[idx_start_loc].location = locs_end[0]
+    cells[idx_start_loc].unmoved = false
+    cells[locs_end_idx[0]] = cells[idx_start_loc]
+
+    cells[idx_end_loc].location = locs_end[1]
+    cells[idx_end_loc].unmoved = false
+    cells[locs_end_idx[1]] = cells[idx_end_loc]
+
+    cells[idx_start_loc] = nil
+    cells[idx_end_loc] = nil
+  end
+
+  def default_board_update(idx_start_loc, idx_end_loc, end_loc)
+    cells[idx_start_loc].location = end_loc
+    cells[idx_end_loc] = cells[idx_start_loc]
+    cells[idx_start_loc] = nil
+
+    cells[idx_end_loc].unmoved = false if unmoved_pawn?(idx_end_loc)
+  end
+
+  def kings_loc_update(idx_end_loc, end_loc)
+    @white_king_loc = end_loc if white_king?(idx_end_loc)
+    @black_king_loc = end_loc if black_king?(idx_end_loc)
+  end
+
   def update_board(user_input)
     start_loc = user_input[0]
     end_loc = user_input[1]
@@ -514,30 +540,16 @@ class Board
       locs_end = castling_end_locations(start_loc, end_loc)
       locs_end_idx = locs_end.map { |notation| notation_to_cell(notation) }
 
-      cells[idx_start_loc].location = locs_end[0]
-      cells[idx_start_loc].unmoved = false
-      cells[locs_end_idx[0]] = cells[idx_start_loc]
-
-      cells[idx_end_loc].location = locs_end[1]
-      cells[idx_end_loc].unmoved = false
-      cells[locs_end_idx[1]] = cells[idx_end_loc]
-
-      cells[idx_start_loc] = nil
-      cells[idx_end_loc] = nil
+      castling_board_update(idx_start_loc, idx_end_loc, locs_end, locs_end_idx)
 
       # For posterior king locations' instance variables redefinitions.
       idx_end_loc = locs_end_idx[0]
       end_loc = locs_end[0]
     else
-      cells[idx_start_loc].location = end_loc
-      cells[idx_end_loc] = cells[idx_start_loc]
-      cells[idx_start_loc] = nil
-
-      cells[idx_end_loc].unmoved = false if unmoved_pawn?(idx_end_loc)
+      default_board_update(idx_start_loc, idx_end_loc, end_loc)
     end
 
-    @white_king_loc = end_loc if white_king?(idx_end_loc)
-    @black_king_loc = end_loc if black_king?(idx_end_loc)
+    kings_loc_update(idx_end_loc, end_loc)
   end
 
   # def check?(king_loc)
