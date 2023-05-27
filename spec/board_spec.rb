@@ -688,6 +688,22 @@ describe Board do
       end
     end
 
+    context "move contemplated in @en_passant" do
+      before do
+        cells = Array.new(65)
+        cells[48] = Pawn.new("\u265F", "a4")
+        cells[31] = Pawn.new("\u2659", "b4")
+        board.instance_variable_set(:@cells, cells)
+
+        en_passant = %w[b4 a3]
+        board.instance_variable_set(:@en_passant, en_passant)
+      end
+      it "returns true" do
+        output = board.valid_move?(%w[b4 a3])
+        expect(output).to eq true
+      end
+    end
+
     context "bishop moved to square occupied by opponent's piece" do
 
       before do

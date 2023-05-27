@@ -475,6 +475,8 @@ class Board
     idx_start_loc = notation_to_cell(user_input[0])
     idx_end_loc = notation_to_cell(user_input[1])
 
+    return true if take_en_passant?(user_input)
+
     if rook_queen_bishop?(idx_start_loc)
       cells[idx_start_loc].possible_moves.include?(end_loc) && nil_or_opponent?(idx_start_loc, idx_end_loc) &&
         intermediate_squares(user_input).all? { |square| cells[notation_to_cell(square)] == nil}
