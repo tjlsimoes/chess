@@ -310,6 +310,18 @@ class Board
       aside_vu_en_passant(start_loc, end_loc, start_loc_row)
     end
   end
+
+  def possible_en_passant(start_loc, end_loc, idx_start_loc)
+    start_loc_row = start_loc[1].to_i
+    end_loc_row = end_loc[1].to_i
+
+    if start_loc_row > end_loc_row # vertical downwards
+      vd_en_passant(start_loc, end_loc, start_loc_row, idx_start_loc)
+    else # vertical upwards
+      vu_en_passant(start_loc, end_loc, start_loc_row, idx_start_loc)
+    end
+  end
+
   def intermediate_squares(user_input)
 
     start_loc = user_input[0]

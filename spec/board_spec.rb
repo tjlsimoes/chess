@@ -436,6 +436,40 @@ describe Board do
     end
   end
 
+  describe "#possible_en_passant" do
+    context "vertical downwards movement form d7 to d5" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u2659", "d7")
+        cells[38] = Pawn.new("\u265F", "c5")
+        cells[36] = Pawn.new("\u265F", "e5")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns [%w[e5 d6],%w[c5 d6]]" do
+        output = board.possible_en_passant("d7", "d5", 53)
+
+        expect(output).to eq([%w[e5 d6], %w[c5 d6]])
+      end
+    end
+
+    context "vertical upwards movement form d2 to d4" do
+      before do
+        cells = Array.new(65)
+        cells[13] = Pawn.new("\u265F", "d2")
+        cells[30] = Pawn.new("\u2659", "c4")
+        cells[28] = Pawn.new("\u2659", "e4")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns [%w[e4 d3], %w[c4 d3]]" do
+        output = board.possible_en_passant("d2", "d4", 13)
+
+        expect(output).to eq([%w[e4 d3], %w[c4 d3]])
+      end
+    end
+  end
+
   describe "#intermediate_squares" do
 
     context "vertical upwards movement" do
