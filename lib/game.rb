@@ -24,13 +24,14 @@ class Game
   def turn(player)
     user_input = turn_input(player)
     board.update_board(user_input)
+    # p board.en_passant
     board.show
   end
 
   def valid_input?(user_input)
     separator = (user_input[2] == "-")
-    letters = [user_input[0], user_input[3]].all? {|letter| Array('a'..'h').include?(letter)}
-    numbers = [user_input[1], user_input[4]].all? {|number| Array(1..8).include?(number.to_i)}
+    letters = [user_input[0], user_input[3]].all? { |letter| Array('a'..'h').include?(letter) }
+    numbers = [user_input[1], user_input[4]].all? { |number| Array(1..8).include?(number.to_i) }
 
     separator && letters && numbers
   end
@@ -42,7 +43,7 @@ class Game
 
   def input_guard_clauses(user_input_orig, user_input, player)
     valid_input?(user_input_orig) && board.valid_move?(user_input) &&
-      player_piece_match?(user_input, player)
+      player_piece_match?(user_input, player) # Missing check? evaluation.
   end
 
   private

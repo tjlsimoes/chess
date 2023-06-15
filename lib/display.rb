@@ -11,6 +11,10 @@ module Display
     "#{name}, please select the piece you would like to move and the position to which you would like to move it to, e.g. d5-e6"
   end
 
+  def display_promotion
+    "Please select the piece that you would like to promote your pawn into. Options: pawn, rook, knight, bishop, queen."
+  end
+
 	def display_input_warning
     "\e[31mSorry, that is an invalid input. Please, try again.\e[0m"
   end

@@ -4,10 +4,12 @@ require_relative "bishop.rb"
 require_relative "king.rb"
 require_relative "queen.rb"
 require_relative "pawn.rb"
+require_relative 'display.rb'
 
 # Chess board
 
 class Board
+  include Display
   attr_accessor :white_king_loc, :black_king_loc,
                 :cells, :en_passant
 
@@ -327,6 +329,72 @@ class Board
     end
   end
 
+  # Board#update_board helper methods in regard
+  # to pawn promotion possibility.
+
+  def white_pawn_promotion?(idx_start_loc, end_loc)
+    cells[idx_start_loc].is_a?(Pawn) &&
+      cells[idx_start_loc].colour == "white" &&
+        end_loc[1] == "8"
+  end
+
+  def black_pawn_promotion?(idx_start_loc, end_loc)
+    cells[idx_start_loc].is_a?(Pawn) &&
+      cells[idx_start_loc].colour == "black" &&
+        end_loc[1] == "1"
+  end
+
+  def pawn_promotion?(idx_start_loc, end_loc)
+    white_pawn_promotion?(idx_start_loc, end_loc) ||
+      black_pawn_promotion?(idx_start_loc, end_loc)
+  end
+
+  def valid_promotion_input?(promotion_input)
+    %w[pawn rook knight bishop queen].include?(promotion_input.downcase)
+  end
+
+  def promotion_input
+    puts display_promotion
+    new_piece_class = gets.chomp
+
+    return new_piece_class if valid_promotion_input?(new_piece_class)
+
+    puts display_input_warning
+    promotion_input
+  end
+
+  def new_white_piece(promotion_input, end_loc)
+    case promotion_input
+    when "pawn"
+      Pawn.new("\u265F", end_loc)
+    when "rook"
+      Rook.new("\u265C", end_loc)
+    when "knight"
+      Knight.new("\u265E", end_loc)
+    when "bishop"
+      Bishop.new("\u265D", end_loc)
+    when "queen"
+      Queen.new("\u265B", end_loc)
+    end
+  end
+
+  def new_black_piece(promotion_input, end_loc)
+    case promotion_input
+    when "pawn"
+      Pawn.new("\u2659", end_loc)
+    when "rook"
+      Rook.new("\u2656", end_loc)
+    when "knight"
+      Knight.new("\u2658", end_loc)
+    when "bishop"
+      Bishop.new("\u2657", end_loc)
+    when "queen"
+      Queen.new("\u2655", end_loc)
+    end
+  end
+
+  ###################################
+
   def intermediate_squares(user_input)
 
     start_loc = user_input[0]
@@ -545,6 +613,17 @@ class Board
     cells[other_pawn_idx] = nil
   end
 
+  def promotion_board_update(idx_start_loc, idx_end_loc, end_loc)
+    new_piece_class = promotion_input
+    if white_pawn_promotion?(idx_start_loc, end_loc)
+      cells[idx_start_loc] = nil
+      cells[idx_end_loc] = new_white_piece(new_piece_class, end_loc)
+    elsif  black_pawn_promotion?(idx_start_loc, end_loc)
+      cells[idx_start_loc] = nil
+      cells[idx_end_loc] = new_black_piece(new_piece_class, end_loc)
+    end
+  end
+
   def kings_loc_update(idx_end_loc, end_loc)
     @white_king_loc = end_loc if white_king?(idx_end_loc)
     @black_king_loc = end_loc if black_king?(idx_end_loc)
@@ -557,7 +636,9 @@ class Board
     idx_start_loc = notation_to_cell(user_input[0])
     idx_end_loc = notation_to_cell(user_input[1])
 
-    if take_en_passant?(user_input)
+    if pawn_promotion?(idx_start_loc, end_loc)
+      promotion_board_update(idx_start_loc, idx_end_loc, end_loc)
+    elsif take_en_passant?(user_input)
       en_passant_board_update(idx_start_loc, idx_end_loc, start_loc, end_loc)
       @en_passant = []
     elsif castling?(idx_start_loc, idx_end_loc, start_loc, end_loc)

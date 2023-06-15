@@ -1665,3 +1665,960 @@
 
 # ✓ Sketch of Board#checkmate? and, hence,
 #   of Board#game_over?
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - En passant, castling, exchange of pieces.
+# - Win statements logic does not apply.
+
+# Castling:
+# The following conditions must be met:
+# (a) The king that makes the castling move
+#     has not yet moved in the game.
+# (b) The rook that makes the castling move
+#     has not yet moved in the game.
+# (c) The king is not in check.
+# (d) The king does not move over a square
+#     that is attacked by an enemy piece
+#     during the castling move.
+# (e) The king does not move to a square that
+#   is attacked by an enemy piece during the
+#   castling move.
+# (f) All squares between the rook and king
+#   before the castling move are empty.
+# (g) The King and rook must occupy the same
+#   rank (or row).
+
+
+# (a) and (b) call for an unmoved instance
+# variable on King and Rook, similar to the
+# one defined on the Pawn class.
+# As things now stand, this might call for
+# a new branch on the conditional flow of
+# Board#update_board: update King and Rook
+# respective unmoved instance variables.
+
+# (c) can be easily taken care: simply call
+# check?(king_loc).
+
+# (d) can perhaps be solved by calling
+# check? for each square that the king is
+# meant to transverse.
+
+# (e): simply call check? on king's end
+# location.
+
+# (f): check if pieces' locations' rows
+# match.
+
+# How ought the possibility of castling
+# be integrated to the code already written?
+
+# - It requires a new definition of
+#   Board#update_board: it escapes the logic
+#   of changing the start-square to nil and
+#   replacing the end-square witht the
+#   previously definition of the start-square.
+# - It requires an update, seemingly within
+#   Board#update_board on @unmoved for both
+#   Rook and King piece.
+
+# - It constitutes a new possibility that
+#   has to be accounted for in
+#   Board#valid_move?. This also calls for
+#   a lookout on the possible repercussions
+#   of the redefinition of Board#valid_move?
+#   to include this possibility. Namely, will
+#   it have any undesired effect on the
+#   check or checkmate evaluation?
+
+# How ought then the castling possibility
+# be concretely integrated into
+# Board#valid_move?
+# 1. Identification that it is a castling
+#    type of movement.
+# 2. Evaluation of the various conditions
+#    that need to be met for castling move
+#    to be valid.
+
+# How is a castling movement to be
+# identified?
+# As of right now, Board#valid_move? takes
+# in user_input, that is, an array such as
+# ["a6", "b7"].
+# It then defines variables for the start-
+# and end-locations and variables for the
+# respective indexes.
+# Given this input, how ought a castling
+# movement to be identified?
+
+# What ought the user_input for a castling
+# move be?
+# - The actual end locations for the king
+#   and rook.
+#                  or
+# - The starting positions of both the king
+#   and the rook.
+
+# Second possibility for user_input seems
+# more adequate.
+
+# Ought there to be a restriction as to the
+# referencing index on user_input for a
+# castling move: e.g. the location for the
+# king ought to come first and the location
+# for the rook ought to come second in
+# user_input?
+# For now, let's try not to impose any
+# restriction of this order. It seems a bit
+# too artificial.
+
+##### User input for castling move:
+# Ought to be locations of to be moved
+# king and rook.
+
+# To that light, castling move ought to be
+# able to be identified by:
+# - Checking that both locations point to
+#   a rook and a king of the same colour.
+# - A rook and a king of the same colour
+#   on the same row.
+
+# How to check that both locations point to
+# a rook and a king of the same colour?
+
+# Let's consider an example:
+
+# user_input = ["e8", "a8"]
+
+# start_loc = user_input[0]
+# end_loc = user_input[1]
+
+# idx_start_loc = notation_to_cell(user_input[0])
+# idx_end_loc = notation_to_cell(user_input[1])
+
+# def castling?(idx_start, idx_end, start_loc, end_loc)
+#   king_and_rook?(idx_start, idx_end) &&
+#     !opponent?(idx_start, idx_end) &&
+#       same_row?(start_loc, end_loc)
+# end
+
+# def same_row?(start_loc, end_loc)
+#   start_loc[1] == end_loc[1]
+# end
+
+# def king_and_rook?(idx_start, idx_end)
+#   cells[idx_start].is_a?(King) && cells[idx_end].is_a?(Rook) ||
+#       cells[idx_end].is_a?(King) && cells[idx_start].is_a?(Rook)
+# end
+
+
+############### 24 May #####################
+
+# Point being worked on:
+# - Integrating castling possibily into
+#   current code.
+
+# Artificial or not, a restriction on the
+# user input for a castling move would make
+# its evaluation easier.
+# Let it be so that:
+
+########### Castling move, input restriction:
+# User input ought to include the king and
+# rook locations that are to be moved.
+# King's location ought to come first. And
+# the rook's location ought to come second.
+
+# Hence, as of right now, identification of
+# a castling move seems to be taken care of.
+# Its evaluation then ought to be the next
+# effort.
+
+# Remember, for castling the following
+# conditions must be met:
+# (a) The king that makes the castling move
+#     has not yet moved in the game.
+# (b) The rook that makes the castling move
+#     has not yet moved in the game.
+# (c) The king is not in check.
+# (d) The king does not move over a square
+#     that is attacked by an enemy piece
+#     during the castling move.
+# (e) The king does not move to a square that
+#   is attacked by an enemy piece during the
+#   castling move.
+# (f) All squares between the rook and king
+#   before the castling move are empty.
+# (g) The King and rook must occupy the same
+#   rank (or row).
+
+
+# (a) and (b) call for an unmoved instance
+# variable on King and Rook, similar to the
+# one defined on the Pawn class.
+# As things now stand, this might call for
+# a new branch on the conditional flow of
+# Board#update_board: update King and Rook
+# respective unmoved instance variables.
+
+# (c) can be easily taken care: simply call
+# check?(king_loc).
+
+# (d) can perhaps be solved by calling
+# check? for each square that the king is
+# meant to transverse.
+
+# (e): simply call check? on king's end
+# location.
+
+# (f) call Board#intermediate_squares and
+# check that all squares are emtpy.
+
+# (g): check if pieces' locations' rows
+# match.
+
+
+# (a) and (b):
+# def unmoved?(idx)
+#   celss[idx].unmoved == true
+# end
+
+# (c): call check? on king idx.
+# (d): call check? on intermediate_steps
+# (e): call check? on to be end king idx.
+# (f): call intermediate_squares
+
+
+# Conditions (d) and (e) require an
+# understanding of where the king ought to
+# end up.
+
+# When castling, the king moves two squares
+# towards the rook, and the rook moves over
+# the king to the next square.
+
+# The matter is the rook can be on the left
+# or on the right of the king.
+# This seems to call for a conditional flow
+# in regard to the specific column relation
+# between king and rook on a castling move.
+
+# Assuming an user input with the treatment
+# below:
+
+# user_input = ["e8", "a8"]
+
+# start_loc = user_input[0]
+# end_loc = user_input[1]
+
+# idx_start_loc = notation_to_cell(user_input[0])
+# idx_end_loc = notation_to_cell(user_input[1])
+
+# def castling_end_locations(start_loc)
+#   columns = %w[a b c d e f g h]
+#   start_loc_col_idx = columns.index(start_loc[0])
+
+#   if start_loc[0] > end_loc[0]
+#     king_end_loc = [columns.index(start_loc_col_idx - 2), start_loc[1]].join
+#     rook_end_loc = [columns.index(start_loc_col_idx - 1), start_loc[1]].join
+#   else
+#     king_end_loc = [columns.index(start_loc_col_idx + 2), start_loc[1]].join
+#     rook_end_loc = [columns.index(start_loc_col_idx + 1), start_loc[1]].join
+#   end
+
+#   [king_end_loc, rook_end_loc]
+# end
+
+
+# check?(king_end_loc)
+
+# intermediate_squares([king_end_loc, start_loc]).all? do |square|
+#   !check?(square)
+# end
+
+
+# As of right now, seemingly, any castling
+# movement ought to be considered a valid
+# move.
+
+# The refactor of Board#update_board for it
+# to include the specificity of castling
+# movements is, however, still missing.
+
+# Repercussions of integration of castling
+# movement on Board#update_board:
+# - Need to introduce a conditional flow
+#   into board redefinition in case of
+#   user_input being a castling movement?
+# - Need to update @unmoved for king and
+#   rook in case of a castling movement.
+
+# Seemingly:
+# ✓ Integration of castling possibility
+#   into game in general and, concretely,
+#   to Board#valid_move? and
+#   Board#update_board.
+
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - En passant, exchange of pieces.
+# - Win statements logic does not apply.
+
+
+############### 25 May #####################
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - En passant, exchange of pieces.
+# - Win statements logic does not apply.
+# - Include check? clause into valid_move?
+
+# Point to be worked on:
+# - Taking en-passant integration.
+
+# There is one special rule, called taking
+# en-passant. When a pawn makes a double
+# step from the second row to the fourth row,
+# and there is an enemy pawn on an adjacent
+# square on the fourth row, then this enemy
+# pawn in the next move may move diagonally
+# to the square that was passed over by the
+# double-stepping pawn, which is on the third
+# row.
+# In this same move, the double-stepping pawn
+# is taken. This taking en-passant must be
+# done directly: if the player who could take
+# en-passant does not do this in the first move
+# after the double step, this pawn cannot be
+# taken anymore by an en-passant move.
+
+
+# How ought the taking en-passant be thought?
+# When is taking en-passant really a possible
+# move?
+# You can capture en passant when your pawn
+# is one square deep into your opponent's
+# half of the board, and they move their pawn
+# two squares from its starting square such
+# that it lands directly next to yours.
+
+# Taking en-passant becomes possible whenever
+# a previously unmoved pawn is moved two
+# squares forward such that it lands to the
+# side of an opponent pawn.
+
+# Taking en-passant calls for a refactoring
+# of Board#update_board as is: taking
+# en-passant doesn't just require
+# changing the starting position to nil and
+# updating the end-square. It calls for
+# the update to nil of the pawn that is to
+# be "indirectly taken".
+# More than that: perhaps a new conditional
+# dimension ought to be added to
+# Board#update_board for there to be a log
+# of possible taking en-passant moves.
+
+# Let's try focus on this new conditional
+# dimension of Board#update_board seemingly
+# required.
+
+# As of right now Board#update_board already
+# updates Pawn@unmoved whenever a pawn is
+# moved.
+# Perhaps a new conditional can be added
+# that would check for a possible taking
+# en-passant movement on the next play.
+
+# Logic seems to have to be:
+# if pawn moved two squares
+#   - check if there's an opponent pawn
+#   to either side of pawn's end location
+#   - depending on the side, list possible
+#   taking en-passant movement as an array
+#   that ought to be equal to the user input
+#   that would indicate that movement, e.g.
+#   pawn moved to "d4" with opponent pawn
+#   at "c4", possible taking en-passant
+#   ought to be defined: ["c4", "d3"].
+
+# Logic for the identification of a two
+# square pawn movement.
+
+# def unmoved_pawn_twosq?(idx_start_loc, start_loc, end_loc)
+#   # Assuming #update_board will only be called on valid
+#   # two square pawn movements.
+
+#   columns = %w[a b c d e f g h]
+
+#   row_start = start_loc[1].to_i
+#   row_end = end_loc[1].to_i
+
+#   row_diff = (row_start - row_end).abs
+
+#   cells[idx_start_loc].is_a?(Pawn) && row_diff == 2
+# end
+
+# Logic to check for opponent pawn on either
+# side.
+
+# def side_opponent_pawn?(idx_start_loc, idx_end_loc, end_loc)
+#   columns = %w[a b c d e f g h]
+
+#   moved_pawn_colour = cells[idx_start_loc].colour
+
+#   end_column_idx = columns.index(end_loc[0])
+#   column_vars = [columns[end_column_idx + 1]]
+#   column_vars << columns[end_column_idx - 1] if end_column_idx - 1 > 0
+#   sides_moved_pawn = column_vars.map { |column| [column, end_loc[1]].join }
+
+#   sides_moved_pawn.any? do |notation|
+#     cells[notation_to_cell(notation)].is_a?(Pawn) &&
+#       cells[notation_to_cell(notation)].colour != moved_pawn_colour
+#   end
+# end
+
+# def aside(end_loc)
+#   columns = %w[a b c d e f g h]
+
+#   end_column_idx = columns.index(end_loc[0])
+#   column_var = [columns[end_column_idx + 1]] if end_column_idx + 1 < 8
+
+#   return nil if column_var.nil?
+
+#   aside = [column_var, end_loc[1]].join
+# end
+
+# def aside_opponent_pawn?(idx_start_loc, end_loc)
+#   moved_pawn_colour = cells[idx_start_loc].colour
+
+#   return false if aside(end_loc).nil?
+
+#   idx_aside = notation_to_cell(aside(end_loc))
+
+#   cells[idx_aside].is_a?(Pawn) &&
+#     cells[idx_aside].colour != moved_pawn_colour
+# end
+
+# def bside(end_loc)
+#   columns = %w[a b c d e f g h]
+
+#   end_column_idx = columns.index(end_loc[0])
+#   column_var = columns[end_column_idx - 1] if end_column_idx - 1 > 0
+
+#   return nil if column_var.nil?
+
+#   bside = [column_var, end_loc[1]].join
+# end
+
+# def bside_opponent_pawn?(idx_start_loc, end_loc)
+#   moved_pawn_colour = cells[idx_start_loc].colour
+
+#   return false if bside(end_loc).nil?
+
+#   idx_bside = notation_to_cell(bside(end_loc))
+
+#     cells[idx_bside].is_a?(Pawn) &&
+#       cells[idx_bside].colour != moved_pawn_colour
+# end
+
+# def absides_opponent_pawns?(idx_start_loc, end_loc)
+#   aside_opponent_pawn?(idx_start_loc, end_loc) &&
+#     bside_opponent_pawn?(idx_start_loc, end_loc)
+# end
+
+# Logic to get possible en passant movements.
+# Upwards and downwards relative to pawn that
+# makes a two square movement and is to be
+# possibly taken on the next move.
+
+# For example. Vertical downwards is being
+# thought as a movement of a black pawn from
+# "e7" to "e5" that opens a possibily, for
+# example, of a white pawn located at "f5"
+# to take that black pawn, making a move
+# "f5" to "e6".
+
+# def bside_vd_en_passant(start_loc, end_loc, start_loc_row) # Vertical downwards
+#   en_pass_end_row = start_loc_row - 1
+#   en_pass_end_loc = [start_loc[0], en_pass_end_row].join
+
+#   [bside(end_loc), en_pass_end_loc]
+# end
+
+# def aside_vd_en_passant(start_loc, end_loc, start_loc_row) # Vertical downwards
+#   en_pass_end_row = start_loc_row - 1
+#   en_pass_end_loc = [start_loc[0], en_pass_end_row].join
+
+#   [aside(end_loc), en_pass_end_loc]
+# end
+
+# def bside_vu_en_passant(start_loc, end_loc, start_loc_row) # Vertical upwards
+#   en_pass_end_row = start_loc_row + 1
+#   en_pass_end_loc = [start_loc[0], en_pass_end_row].join
+
+#   [bside(end_loc), en_pass_end_loc]
+# end
+
+# def aside_vu_en_passant(start_loc, end_loc, start_loc_row) # Vertical upwards
+#   en_pass_end_row = start_loc_row + 1
+#   en_pass_end_loc = [start_loc[0], en_pass_end_row].join
+
+#   [aside(end_loc), en_pass_end_loc]
+# end
+
+# def vd_en_passant(start_loc, end_loc, start_loc_row, idx_start_loc)
+#   if absides_opponent_pawns?(idx_start_loc, end_loc)
+#     possible_en_passant = []
+#     possible_en_passant << aside_vd_en_passant(start_loc, end_loc, start_loc_row)
+#     possible_en_passant << bside_vd_en_passant(start_loc, end_loc, start_loc_row)
+#   elsif bside_opponent_pawn?(idx_start_loc, end_loc)
+#     bside_vd_en_passant(start_loc, end_loc, start_loc_row)
+#   elsif aside_opponent_pawn?(idx_start_loc, end_loc)
+#     aside_vd_en_passant(start_loc, end_loc, start_loc_row)
+#   end
+# end
+
+# def vu_en_passant(start_loc, end_loc, start_loc_row, idx_start_loc)
+#   if absides_opponent_pawns?(idx_start_loc, end_loc)
+#     possible_en_passant = []
+#     possible_en_passant << aside_vu_en_passant(start_loc, end_loc, start_loc_row)
+#     possible_en_passant << bside_vu_en_passant(start_loc, end_loc, start_loc_row)
+#   elsif bside_opponent_pawn?(idx_start_loc, end_loc)
+#     bside_vu_en_passant(start_loc, end_loc, start_loc_row)
+#   elsif aside_opponent_pawn?(idx_start_loc, end_loc)
+#     aside_vu_en_passant(start_loc, end_loc, start_loc_row)
+#   end
+# end
+
+# Main scripting method to register possible
+# taking en-passant moves.
+
+# def possible_en_passant(start_loc, end_loc, idx_start_loc)
+#   start_loc_row = start_loc[1].to_i
+#   end_loc_row = end_loc[1].to_i
+
+#   if start_loc_row > end_loc_row # vertical downwards
+#     vd_en_passant(start_loc, end_loc, start_loc_row, idx_start_loc)
+#   else # vertical upwards
+#     vu_en_passant(start_loc, end_loc, start_loc_row, idx_start_loc)
+#   end
+# end
+
+# Current #possible_en_passant does not
+# contemplate the possibility of there being
+# a bside and aside_oponnent_pawn.
+# ✓ Seemingly solved.
+
+
+############### 26 May #####################
+
+# Correction and addition of tests for code
+# sketched out previously for taking
+# en-passant.
+
+# Still missing:
+# Complete and actual integration of
+# #possible_en_passant into currently
+# sketched out chess game code.
+
+# #possible_en_passant was being thought as
+# something to be included into
+# Board#update_board.
+
+# On receiving user_input Board#update_board
+# would check if user_input would amount to
+# an unmoved pawn moved two squares by the
+# method Board#unmoved_pawn_twosq?.
+
+# If it checked out true, the idea would
+# be:
+# - To do things as usual: update the
+#   board as would befit a move of an
+#   unmoved pawn by two squares.
+#   - With the current code that would
+#     amount to following the normal
+#     conditional flow (updating start to
+#     nil and end to pawn). With the
+#     addition, however, of the @unmoved
+#     update to false.
+# - And also perhaps update a board instance
+#   variable (e.g. @possible_en_passant)
+#   that would be integrated into the
+#   Board#valid_move? conditional flow and
+#   reset at the end of every "other player
+#   move."
+
+# Hence, integration of #possible_en_passant
+# seems to call for a 3 step process:
+# - Update of Board#update_board.
+# - Update of Board#valid_move?.
+# - Update of game dynamic to reset a
+#   possible board instance variable named
+#   @possible_en_passant.
+
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - En passant, exchange of pieces.
+# - Win statements logic does not apply.
+# - Include check? clause into valid_move?
+# - Error on checkmate evaluation:
+#   d2-d4, c7-c5, e1-d2, d5-a5 does not
+#   result in checkmate.
+
+############### 27 May #####################
+
+# Point to be worked on:
+# - Integration of #possible_en_passant.
+
+# It was said:
+# Integration of #possible_en_passant
+# seems to call for a 3 step process:
+# - Update of Board#update_board.
+# - Update of Board#valid_move?.
+# - Update of game dynamic to reset a
+#   possible board instance variable named
+#   @possible_en_passant.
+
+# How ought an instance variable
+# @possible_en_passant be integrated into
+# game dynamic?
+
+# 1. It ought to start empty or as a nil
+#    value.
+# 2. Depending on user input, it may be
+#    updated to include a possible opponent's
+#    movement.
+# 3. Opponent ought to input its user input.
+# 4. All conditionals concerning user input
+#    and #possible_en_passant ought to be
+#    verified. Centrally: on Board#valid_move?.
+#     a - If it turns out that opponent is
+#         inputing a taking en-passant move
+#         #possible_en_passant output ought
+#         to validate user input.
+#       - Board#update_board ought also
+#         to perform according to that
+#         specific context.
+#       - @possible_en_passant ought to be
+#         reset.
+#     b - If it turns out that opponent is
+#         inputting a move that opens a
+#         possible taking en_passant from
+#         its opponent.
+#       - @possible_en_passant ought to be
+#         reset.
+#       - @possible_en_passant ought to be
+#         updated
+
+# It seems that:
+# - Default @possible_en_passant has to be []
+#   for #include? to be a valid method.
+# - @possible_en_passant has to be reset:
+#     - after valid_move? of opponent user
+#       input;
+#     - before its update based on opponent
+#       user input.
+
+# So the question seems to be:
+# Where ought Board@possible_en_passant be
+# updated?
+
+# Perhaps as was being thought previously:
+# Within Board#update_board. First reset
+# it and then update it. Or simlpy update
+# it.
+
+# How ought board be updated when move
+# amounts to a take en passant?
+
+# Two possibilities: upwards movement
+# or downwards movement. Note that the
+# reference for the definition of upwards
+# or downwards is no longer the initial
+# pawn that opens up the possibility of take
+# en-passant, but the pawn that is
+# actualizing the take en-passant.
+
+# Seemingly:
+# ✓ Update of Board#update_board.
+# ✓ Update of Board#valid_move?.
+# ✓ Update of game dynamic to reset a
+#   possible board instance variable named
+#   @possible_en_passant.
+
+# However take en-passant isn't working
+# at all in user experience of the game!...
+# Seemingly due to problems around reading
+# and setting of @en_passant.
+
+############### 9 Jun ######################
+
+# Point to be worked on:
+# - Fixing en passant.
+
+# Scraps: previous version of Board#check?
+
+# def check?(king_loc)
+#   if cells[notation_to_cell(king_loc)].colour == "white"
+#     cells.any? do |value|
+#       if !value.nil?
+#         value.colour != "white" && valid_move?([value.location, king_loc])
+#       end
+#     end
+#   else
+#     cells.any? do |value|
+#       if !value.nil?
+#         value.colour != "black" && valid_move?([value.location, king_loc])
+#       end
+#     end
+#   end
+# end
+
+# Seemingly:
+# - Problems with en passant movement are
+#   resolved!
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - Exchange of pieces.
+# - Win statements logic does not apply.
+# - Include check? clause into valid_move?
+
+# Point to be worked on:
+# - Pieces' exchange.
+
+# Pieces' exchange calls for:
+# - Additional conditional branch in
+#   Board#valid_move?
+# - Conditional branch that will have to
+#   contemplate both player's pieces
+#   distinctly.
+# - Additional conditional branch in
+#   Board#update_board.
+# - Additional game dynamic surrounding
+#   player's piece selection.
+
+# But what is pieces' exchange exactly?
+
+# Pawns that reach the last row of the board
+# promote.
+
+# When a player moves a pawn to the last row
+# of the board, he replaces the pawn by a
+# queen, rook, knight, or bishop (of the same
+# color).
+
+# It is not required that the pawn is promoted
+# to a piece taken.
+
+# Hence:
+# Pawn promotion occurs when a pawn reaches
+# its last row.
+
+# For white pawns that will be row 8.
+# For black pawns that will be row 1.
+
+# Perhaps there is no need for a new
+# conditional branch in Board#valid_move?.
+# After all the move will have to be valid
+# according to the standard criteria.
+
+# What will have to be different is
+# Board#update_board.
+# As said before:
+# - It will have to identify pawn promotion
+#   for either side of the board.
+# - It will have to update the board in
+#   accordance to a selection from the
+#   player.
+# - And this last point: in a manner similar
+#   to the default board update, but not
+#   equal!
+
+# Let us tackle the first side of the
+# problem: pawn promotion identification.
+
+# Pawn promotion:
+# if pawn.colour == white and loc_end == x8
+# if pawn.colour == black and loc_end == x1
+
+def white_pawn_promotion?(idx_start_loc, end_loc)
+  cells[idx_start_loc].is_a?(Pawn) &&
+    cells[idx_start_loc].colour == "white" &&
+      end_loc[1] == "8"
+end
+
+def black_pawn_promotion?(idx_start_loc, end_loc)
+  cells[idx_start_loc].is_a?(Pawn) &&
+    cells[idx_start_loc].colour == "black" &&
+      end_loc[1] == "1"
+end
+
+def pawn_promotion?(idx_start_loc, end_loc)
+  white_pawn_promotion?(idx_start_loc, end_loc) ||
+    black_pawn_promotion?(idx_start_loc, end_loc)
+end
+
+# If pawn_promotion? turns out to be true,
+# user input will have to determine to
+# which piece the pawn will be promoted to.
+
+# And this begs the question:
+# What would be the best way to get desired
+# user input?
+
+# - Add a method to Board class that would
+#   do the trick?
+# - Or call on a method inherent to the
+#   Game class?
+# - Or allocate everything to a different
+#   module?
+
+# And be that as it may, what ought the user
+# input to look like?
+# Perhaps a simple input of the desired piece
+# class' name, e.g. "queen".
+# One could, moreover, easily accomodate
+# capitalization on user input by calling
+# #downcase on user input.
+
+def valid_promotion_input?(promotion_input)
+  %w[pawn rook knight bishop queen].include?(promotion_input.downcase)
+end
+
+def promotion_input(player)
+  puts display_promotion(player.name)
+  new_piece_class = gets.chomp
+
+  return new_piece_class if valid_promotion_input?(promotion_input)
+
+  puts display_input_warning
+  promotion_input(player)
+end
+
+# Pieces were designed to be initialized
+# with symbol and location.
+
+def new_white_piece(promotion_input, end_loc)
+  case promotion_input
+  when "pawn"
+    Pawn.new("\u265F", end_loc)
+  when "rook"
+    Rook.new("\u265C", end_loc)
+  when "knight"
+    Knight.new("\u265E", end_loc)
+  when "bishop"
+    Bishop.new("\u265D", end_loc)
+  when "queen"
+    Queen.new("\u265B", end_loc)
+  end
+end
+
+def new_black_piece(promotion_input, end_loc)
+  case promotion_input
+  when "pawn"
+    Pawn.new("\u2659", end_loc)
+  when "rook"
+    Rook.new("\u2656", end_loc)
+  when "knight"
+    Knight.new("\u2658", end_loc)
+  when "bishop"
+    Bishop.new("\u2657", end_loc)
+  when "queen"
+    Queen.new("\u2655", end_loc)
+  end
+end
+
+
+############### 10 Jun ######################
+
+# Point to be worked on:
+# - Pieces' exchange.
+
+# Pieces' exchange is being thought so that
+# everything occurs within
+# Board#update_board.
+# That is to say:
+# Verification that move that that ought to
+# result in a pawn promotion is valid occurs
+# as per normal, without any new conditional
+# branch in Board#valid_move?.
+# Within Board#update_board:
+# - There will be a check for pawn promotions
+#   for both players. This may result in the
+#   addition of not one but two conditional
+#   branches.
+# - User input will be obtained as regards to
+#   the desired replacement piece.
+# - Board will be updated accordingly.
+
+# As things now seem, only the last point
+# is missing.
+
+# How ought Board.cells be updated in the
+# case of a pawn promotion?
+
+# Formally:
+# Set to nil start_loc.
+# Set end_loc with replacement piece.
+
+def promotion_board_update(idx_start_loc, idx_end_loc, end_loc)
+  new_piece_class = promotion_input
+  if white_pawn_promotion?(idx_start_loc, end_loc)
+    cells[idx_start_loc] = nil
+    cells[idx_end_loc] = new_white_piece(new_piece_class, end_loc)
+  elsif  black_pawn_promotion?(idx_start_loc, end_loc)
+    cells[idx_start_loc] = nil
+    cells[idx_end_loc] = new_black_piece(new_piece_class, end_loc)
+  end
+end
+
+# Questions:
+# - Is pawn obliged to take an opponent's
+#   piece if it has that possibility?
+# - Does pawn promotion also apply when
+#   last row is reached in a taking move?
+# - Should the @unmoved values for the
+#   pieces selected upon pawn promotion
+#   be false from the start?
+
+# Seemingly:
+# ✓ Pieces' exchange.
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - Win statements logic does not apply.
+# - Include check? clause into valid_move?
+# - White pawn taking from b column to a
+#   column not working.
+
+
+############### 15 Jun ######################
+
+# Point to be worked on:
+# - White pawn taking from b column to a
+#   column not working.
+
+# Seemingly:
+# ✓ White pawn taking from b column to a
+#   column not working.

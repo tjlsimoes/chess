@@ -480,6 +480,161 @@ describe Board do
     end
   end
 
+  describe "#white_pawn_promotion?" do
+
+    context "white pawn from d7 to d8" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u265F", "d7")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.white_pawn_promotion?(53, "d8")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "black pawn from d7 to d8" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u2659", "d7")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.white_pawn_promotion?(53, "d8")
+
+        expect(output).to eq false
+      end
+    end
+  end
+
+  describe "#black_pawn_promotion?" do
+    context "white pawn from d2 to d1" do
+      before do
+        cells = Array.new(65)
+        cells[5] = Pawn.new("\u265F", "d2")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns false" do
+        output = board.black_pawn_promotion?(5, "d1")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "black pawn from d2 to d1" do
+      before do
+        cells = Array.new(65)
+        cells[5] = Pawn.new("\u2659", "d2")
+        board.instance_variable_set(:@cells, cells)
+      end
+
+      it "returns true" do
+        output = board.black_pawn_promotion?(5, "d1")
+
+        expect(output).to eq true
+      end
+    end
+  end
+
+  describe "#valid_promotion_input?" do
+    context "taking promotion_input == \"pawn\"" do
+      it "returns true" do
+        output = board.valid_promotion_input?("pawn")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "taking promotion_input == \"rook\"" do
+      it "returns true" do
+        output = board.valid_promotion_input?("rook")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "taking promotion_input == \"knight\"" do
+      it "returns true" do
+        output = board.valid_promotion_input?("knight")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "taking promotion_input == \"bishop\"" do
+      it "returns true" do
+        output = board.valid_promotion_input?("bishop")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "taking promotion_input == \"queen\"" do
+      it "returns true" do
+        output = board.valid_promotion_input?("queen")
+
+        expect(output).to eq true
+      end
+    end
+
+    context "taking promotion_input == \"king\"" do
+      it "returns false" do
+        output = board.valid_promotion_input?("king")
+
+        expect(output).to eq false
+      end
+    end
+
+    context "taking promotion_input == \"wizard\"" do
+      it "returns false" do
+        output = board.valid_promotion_input?("wizard")
+
+        expect(output).to eq false
+      end
+    end
+  end
+
+  describe "#new_white_piece" do
+    context "taking \"pawn\" and d7" do
+      it "returns new pawn instance" do
+        output = board.new_white_piece("pawn", "d7")
+
+        expect(output).to be_a(Pawn)
+      end
+    end
+
+    context "taking \"pawn\" and d7" do
+      it "returns new pawn instance with correctly updated location" do
+        output = board.new_white_piece("pawn", "d7")
+
+        expect(output.location).to eq("d7")
+      end
+    end
+  end
+
+  describe "#new_black_piece" do
+    context "taking \"knight\" and d7" do
+      it "returns new knight instance" do
+        output = board.new_black_piece("knight", "d7")
+
+        expect(output).to be_a(Knight)
+      end
+    end
+
+    context "taking \"knight\" and d7" do
+      it "returns new knight instance with correctly updated location" do
+        output = board.new_white_piece("knight", "d7")
+
+        expect(output.location).to eq("d7")
+      end
+    end
+  end
+
   describe "#intermediate_squares" do
 
     context "vertical upwards movement" do
@@ -822,6 +977,56 @@ describe Board do
     end
   end
 
+  describe "#promotion_board_update" do
+    context "white pawn from d7 to d8" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u265F", "d7")
+        board.instance_variable_set(:@cells, cells)
+        allow(board).to receive(:promotion_input).and_return("queen")
+      end
+
+      it "sets cells[idx_start_loc] to nil" do
+        board.promotion_board_update(53, 61, "d8")
+        start_square = board.cells[53]
+
+        expect(start_square).to be_nil
+      end
+    end
+
+    context "white pawn from d7 to d8 to be a queen" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u265F", "d7")
+        board.instance_variable_set(:@cells, cells)
+        allow(board).to receive(:promotion_input).and_return("queen")
+      end
+
+      it "uptades piece to desired class" do
+        board.promotion_board_update(53, 61, "d8")
+        target_square = board.cells[61]
+
+        expect(target_square).to be_a(Queen)
+      end
+    end
+
+    context "white pawn from d7 to d8 to be a queen" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u265F", "d7")
+        board.instance_variable_set(:@cells, cells)
+        allow(board).to receive(:promotion_input).and_return("queen")
+      end
+
+      it "uptades piece to desired class with correct location" do
+        board.promotion_board_update(53, 61, "d8")
+        target_square = board.cells[61]
+
+        expect(target_square.location).to eq("d8")
+      end
+    end
+  end
+
   describe "#update_board" do
 
     context "initial pawn moved two squares" do
@@ -1138,6 +1343,22 @@ describe Board do
         target_square = board.cells[48]
 
         expect(target_square).to be_nil
+      end
+    end
+
+    context "pawn promotion" do
+      before do
+        cells = Array.new(65)
+        cells[53] = Pawn.new("\u265F", "d7")
+        board.instance_variable_set(:@cells, cells)
+        allow(board).to receive(:promotion_input).and_return("queen")
+      end
+
+      it "correctly updates piece to desired class" do
+        board.promotion_board_update(53, 61, "d8")
+        target_square = board.cells[61]
+
+        expect(target_square).to be_a(Queen)
       end
     end
   end
