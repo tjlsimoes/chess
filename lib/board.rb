@@ -442,7 +442,7 @@ class Board
 
     start_column = columns.index(start_loc[0])
     column_vars = [columns[start_column + 1]]
-    column_vars << columns[start_column - 1] if start_column - 1 > 0
+    column_vars << columns[start_column - 1] if start_column - 1 >= 0
 
     if cells[idx_start_loc].possible_moves.include?(end_loc) && intermediate_squares(user_input).all? { |square| cells[notation_to_cell(square)] == nil} && cells[idx_end_loc].nil?
       true
