@@ -11,13 +11,14 @@ require_relative 'display.rb'
 class Board
   include Display
   attr_accessor :white_king_loc, :black_king_loc,
-                :cells, :en_passant
+                :cells, :en_passant, :winner
 
   def initialize
     @white_king_loc = "e1"
     @black_king_loc = "e8"
     @cells = initial_board
     @en_passant = []
+    @winner = nil
   end
 
   def show
@@ -558,6 +559,14 @@ class Board
 
   def game_over?
     checkmate?(white_king_loc) || checkmate?(black_king_loc)
+  end
+
+  def assign_winner
+    if checkmate?(white_king_loc)
+      @winner = "Player 2"
+    elsif checkmate?(black_king_loc)
+      @winner = "Player 1"
+    end
   end
 
   def unmoved_pawn?(idx)

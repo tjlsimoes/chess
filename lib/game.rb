@@ -94,7 +94,8 @@ class Game
 
   def conclusion
     if board.game_over?
-      puts display_winner(current_player.name)
+      board.assign_winner
+      puts display_winner(board.winner)
     else
       puts display_tie
     end
