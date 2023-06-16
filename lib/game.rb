@@ -41,9 +41,25 @@ class Game
     player.pieces_colour == selected_piece.colour
   end
 
+  def check_on_oneself?(user_input, player)
+    fict_board = Board.new
+    duplicate_cells = board.cells.map { |value| value }
+    fict_board.cells = duplicate_cells
+    fict_board.white_king_loc = board.white_king_loc
+    fict_board.black_king_loc = board.black_king_loc
+
+    fict_board.update_board(user_input)
+
+    if player.pieces_colour == "white"
+      fict_board.check?(fict_board.white_king_loc, "white")
+    else
+      fict_board.check?(fict_board.black_king_loc, "black")
+    end
+  end
+
   def input_guard_clauses(user_input_orig, user_input, player)
     valid_input?(user_input_orig) && board.valid_move?(user_input) &&
-      player_piece_match?(user_input, player) # Missing check? evaluation.
+      player_piece_match?(user_input, player) && !check_on_oneself?(user_input, player)
   end
 
   private
