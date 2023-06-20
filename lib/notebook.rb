@@ -2622,3 +2622,143 @@ end
 # Seemingly:
 # ✓ White pawn taking from b column to a
 #   column not working.
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - Win statements logic does not apply.
+# - Include check? clause into valid_move?
+# - Game saving dynamics.
+
+# Point to be worked on:
+# - Include check? clause into valid_move?
+
+# It is not allowed to make a move, such
+# that one's king is in check after the move.
+
+# This verification seems to call for a
+# ficticious board_update for which a
+# check? on the current player's king
+# would be called...
+# Or not. Simply call check? with player's
+# king location.
+
+# There seems to be two possibilities for
+# each pieces' coulor.
+# Either the king piece is being moved or
+# not.
+# if king is moved
+# call check with end_loc
+# else
+# call check with respective king board
+# instance variable.
+
+# def white_check_on_oneself?(user_input)
+#   if is_a_king?(user_input[0])
+#     check?(user_input[1], "white")
+#   else
+#     white_king_loc = board.white_king_loc
+#     check?(white_king_loc)
+#   end
+# end
+
+# def black_check_on_oneself?(user_input)
+#   if is_a_king?(user_input[0])
+#     check?(user_input[1], "black")
+#   else
+#     black_king_loc = board.black_king_loc
+#     check?(black_king_loc)
+#   end
+# end
+
+# It does not seem to be so simple.
+# Board#check_on_oneself seems to have
+# to be called on ficticiously updated
+# Board. Otherwise there will only be a
+# check on the board state previous to
+# Board#update_board.
+
+# The problem seems to be that the fiction
+# board is not fictionally updating the
+# but really updating the board.
+
+############### 16 Jun ######################
+
+# Seemingly:
+# ✓ Include check? clause into valid_move?
+#   That is: verify that player's own moves
+#   that result in own king being in check
+#   are no longer considered valid.
+
+# Points that need work:
+# - Tests for Game#check_on_oneself?
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - Win statements logic does not apply.
+# - Game saving dynamics.
+
+# Seemingly:
+# ✓ (partially) Win statements logic does
+#   not apply. Missing: tie possibility.
+
+# Points that need work:
+# - Tests for Game#check_on_oneself?
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - Tie possibility.
+# - Game saving dynamics.
+
+############### 20 Jun ######################
+
+# Points that need work:
+# - Tests for Game#check_on_oneself?
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - Tie possibility.
+# - Game saving dynamics.
+
+# Basic tests added for Game#check_on_oneself?
+# If seeing things correctly, a double
+# verification of check? is being made by
+# the current code whenever a castling move
+# is made.
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Message on restrictions of user input
+#   for it to signal a castling movement.
+# - Tie possibility.
+# - Game saving dynamics.
+
+# Castling move possibility seems to be
+# working as intended. It is hard-wired
+# to work when user input corresponds to:
+# [king_loc, rook_loc].
+
+# Seemingly:
+# ✓ Message on restrictions of user input
+#   for it to signal a castling movement.
+
+# Points that need work:
+# - Errors due to invalid user input result
+#   in game crashing.
+# - Tie possibility.
+# - Game saving dynamics.
+
+# Seemingly:
+# ✓ Errors due to invalid user input result
+#   in game crashing.
+
+# Points that need work:
+# - Tie possibility.
+# - Game saving dynamics.
+

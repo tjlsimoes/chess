@@ -58,8 +58,9 @@ class Game
   end
 
   def input_guard_clauses(user_input_orig, user_input, player)
-    valid_input?(user_input_orig) && board.valid_move?(user_input) &&
-      player_piece_match?(user_input, player) && !check_on_oneself?(user_input, player)
+    valid_input?(user_input_orig) && board.non_nil_cell?(user_input[0]) && 
+      board.valid_move?(user_input) && player_piece_match?(user_input, player) && 
+        !check_on_oneself?(user_input, player)
   end
 
   private

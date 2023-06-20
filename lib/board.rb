@@ -125,6 +125,10 @@ class Board
     cell = row * 8 - columns.index(column)
   end
 
+  def non_nil_cell?(notation)
+    !cells[notation_to_cell(notation)].nil?
+  end
+
   def nil_or_opponent?(idx_start, idx_end)
     cells[idx_end].nil? || cells[idx_start].colour != cells[idx_end].colour
   end
