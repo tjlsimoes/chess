@@ -8,7 +8,14 @@ module Display
 	end
 
 	def display_player_turn(name)
-    "#{name}, please select the piece you would like to move and the position to which you would like to move it to, e.g. d5-e6"
+<<-HEREDOC
+#{name}, please select the piece you would like to move and 
+the position to which you would like to move it to, e.g. d5-e6.
+
+For a castling move input the actual king location followed by
+the rook location, e.g. e1-a1, where e1 contains the king and
+a1 contains the rook in their pre-castling positions!
+HEREDOC
   end
 
   def display_promotion
