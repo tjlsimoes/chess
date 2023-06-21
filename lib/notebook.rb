@@ -2762,3 +2762,59 @@ end
 # - Tie possibility.
 # - Game saving dynamics.
 
+
+# Path to project where saving and continuing
+# game functionalities were used.
+# /home/tjlsimoes/Documents/ruby-exercises/ruby_basics/hangman
+
+
+# Point to be worked on:
+# - Game saving dynamics.
+
+# Instructions:
+# Make it so you can save the board at
+# any time.
+
+# What do I need then to happen?
+# Need to add:
+# - possibility to save game;
+# - possibility to load saved game.
+
+# Possibility to load saved game ought to
+# be only avaible at the very start.
+
+# Possibility to save game ought to be
+# available for every user input.
+
+# Save game seems somehow so simple as
+# dumping the Game class somewhere.
+
+# What doesn't sound so simple is
+# loading a saved game. That almost
+# seems to call for a substitution of
+# the Game that would be initialized
+# for every game.
+
+# For next time consider initialize
+# strategy on:
+# https://github.com/rlmoser99/ruby_hangman/blob/master/game.rb
+
+############### 21 Jun ######################
+
+# Currently game always picks up with
+# player 1 set as current_player. Even
+# if game was saved on a to be done move
+# by player 2.
+
+# Need to fix some display colours.
+
+# Seemingly:
+# ✓ Unwanted loaded game with current_player
+#   always set to first_player.
+
+# Seemingly:
+# ✓ Need to fix some display colours.
+
+# Point to be worked on:
+# - Tie possibility.
+# - More user friendly display options.

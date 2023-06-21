@@ -94,7 +94,6 @@ class Game
   def player_turns
     until board.game_over? || save?
       turn(current_player)
-      p current_player
       @current_player = switch_current_player
     end
   end

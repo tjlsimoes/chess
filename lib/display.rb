@@ -29,7 +29,7 @@ HEREDOC
 	def display_winner(player)
     "GAME OVER! #{player} is the winner!"
   end
-	
+
 	def display_tie
     "It's a draw!"
   end
@@ -37,27 +37,27 @@ HEREDOC
   def display_start
     <<~HEREDOC
       Would you like to:
-      \e[34m[1]\e[0m Play a new game
-      \e[34m[2]\e[0m Load a saved game
+      [1] Play a new game
+      [2] Load a saved game
     HEREDOC
   end
 
   def display_saved_name
     <<~HEREDOC
-      Your game is now saved. The name of the game is: \e[34m#{@filename}\e[0m
+      Your game is now saved. The name of the game is: #{@filename}
     HEREDOC
   end
 
   def display_saved_prompt
     <<~HEREDOC
-      Enter the game \e[34m[#]\e[0m that you would like to play.
+      Enter the game [#] that you would like to play.
       You can also type 'exit' to leave the game.
     HEREDOC
   end
 
   def display_saved_games(number, name)
     <<~HEREDOC
-      \e[34m[#{number}]\e[0m #{name}
+      [#{number}] #{name}
     HEREDOC
   end
 
