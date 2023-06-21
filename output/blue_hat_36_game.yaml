@@ -1,0 +1,197 @@
+---
+board: !ruby/object:Board
+  white_king_loc: e1
+  black_king_loc: e8
+  cells:
+  - 
+  - !ruby/object:Rook
+    symbol: "♜"
+    location: h1
+    colour: white
+    unmoved: true
+  - !ruby/object:Knight
+    symbol: "♞"
+    location: g1
+    colour: white
+  - !ruby/object:Bishop
+    symbol: "♝"
+    location: f1
+    colour: white
+  - !ruby/object:King
+    symbol: "♚"
+    location: e1
+    colour: white
+    unmoved: true
+  - !ruby/object:Queen
+    symbol: "♛"
+    location: d1
+    colour: white
+  - !ruby/object:Bishop
+    symbol: "♝"
+    location: c1
+    colour: white
+  - !ruby/object:Knight
+    symbol: "♞"
+    location: b1
+    colour: white
+  - !ruby/object:Rook
+    symbol: "♜"
+    location: a1
+    colour: white
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♟"
+    location: h2
+    colour: white
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♟"
+    location: g2
+    colour: white
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♟"
+    location: f2
+    colour: white
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♟"
+    location: e2
+    colour: white
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♟"
+    location: d2
+    colour: white
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♟"
+    location: c2
+    colour: white
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♟"
+    location: b2
+    colour: white
+    unmoved: true
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - !ruby/object:Pawn
+    symbol: "♟"
+    location: a4
+    colour: white
+    unmoved: false
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - !ruby/object:Pawn
+    symbol: "♙"
+    location: a5
+    colour: black
+    unmoved: false
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - !ruby/object:Pawn
+    symbol: "♙"
+    location: h7
+    colour: black
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♙"
+    location: g7
+    colour: black
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♙"
+    location: f7
+    colour: black
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♙"
+    location: e7
+    colour: black
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♙"
+    location: d7
+    colour: black
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♙"
+    location: c7
+    colour: black
+    unmoved: true
+  - !ruby/object:Pawn
+    symbol: "♙"
+    location: b7
+    colour: black
+    unmoved: true
+  - 
+  - !ruby/object:Rook
+    symbol: "♖"
+    location: h8
+    colour: black
+    unmoved: true
+  - !ruby/object:Knight
+    symbol: "♘"
+    location: g8
+    colour: black
+  - !ruby/object:Bishop
+    symbol: "♗"
+    location: f8
+    colour: black
+  - !ruby/object:King
+    symbol: "♔"
+    location: e8
+    colour: black
+    unmoved: true
+  - !ruby/object:Queen
+    symbol: "♕"
+    location: d8
+    colour: black
+  - !ruby/object:Bishop
+    symbol: "♗"
+    location: c8
+    colour: black
+  - !ruby/object:Knight
+    symbol: "♘"
+    location: b8
+    colour: black
+  - !ruby/object:Rook
+    symbol: "♖"
+    location: a8
+    colour: black
+    unmoved: true
+  en_passant: []
+  winner: 
+first_player: &1 !ruby/object:Player
+  name: Player 1
+  pieces_colour: white
+second_player: !ruby/object:Player
+  name: Player 2
+  pieces_colour: black
+current_player: *1

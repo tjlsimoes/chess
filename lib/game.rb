@@ -1,21 +1,32 @@
 
 require_relative 'display.rb'
+require_relative 'database.rb'
+require 'yaml'
 
 # Logic to play the game
 
 class Game
   include Display
+  include Database
   attr_reader :first_player, :second_player, :board, :current_player
+  attr_accessor :save
 
   def initialize
     @board = Board.new
     @first_player = Player.new("Player 1", "white")
     @second_player = Player.new("Player 2", "black")
     @current_player = first_player
+    @save = false
   end
 
   def play
     puts intro_msg
+    game_type = game_selection_input(display_start, /^[12]$/)
+    new_game if game_type == '1'
+    load_game if game_type == '2'
+  end
+
+  def new_game
     board.show
     player_turns
     conclusion
@@ -23,6 +34,9 @@ class Game
 
   def turn(player)
     user_input = turn_input(player)
+
+    return save_game if user_input == "save"
+
     board.update_board(user_input)
     # p board.en_passant
     board.show
@@ -63,12 +77,24 @@ class Game
         !check_on_oneself?(user_input, player)
   end
 
+  def game_selection_input(prompt, regex)
+    loop do
+      print prompt
+      input = gets.chomp
+      input.match(regex) ? (return input) : print(display_input_warning)
+    end
+  end
+
+  def save?
+    save == true
+  end
+
   private
 
   def player_turns
-    @current_player = first_player
-    until board.game_over?
+    until board.game_over? || save?
       turn(current_player)
+      p current_player
       @current_player = switch_current_player
     end
   end
@@ -76,6 +102,9 @@ class Game
   def turn_input(player)
     puts display_player_turn(player.name)
     user_input_orig = gets.chomp
+
+    return "save" if user_input_orig == "save"
+
     user_input = user_input_orig.split("-")
     # p valid_input?(user_input_orig)
     # p board.valid_move?(user_input)
@@ -97,8 +126,6 @@ class Game
     if board.game_over?
       board.assign_winner
       puts display_winner(board.winner)
-    else
-      puts display_tie
     end
   end
 end

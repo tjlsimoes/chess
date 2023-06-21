@@ -33,4 +33,37 @@ HEREDOC
 	def display_tie
     "It's a draw!"
   end
+
+  def display_start
+    <<~HEREDOC
+      Would you like to:
+      \e[34m[1]\e[0m Play a new game
+      \e[34m[2]\e[0m Load a saved game
+    HEREDOC
+  end
+
+  def display_saved_name
+    <<~HEREDOC
+      Your game is now saved. The name of the game is: \e[34m#{@filename}\e[0m
+    HEREDOC
+  end
+
+  def display_saved_prompt
+    <<~HEREDOC
+      Enter the game \e[34m[#]\e[0m that you would like to play.
+      You can also type 'exit' to leave the game.
+    HEREDOC
+  end
+
+  def display_saved_games(number, name)
+    <<~HEREDOC
+      \e[34m[#{number}]\e[0m #{name}
+    HEREDOC
+  end
+
+  def display_load_error
+    <<~HEREDOC
+      There was either an error while loading the game, or you wanted to exit the game.
+    HEREDOC
+  end
 end
